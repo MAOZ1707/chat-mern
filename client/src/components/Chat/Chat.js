@@ -15,6 +15,7 @@ import './Chat.css'
 import Message from './Message'
 
 import io from 'socket.io-client'
+import Conversation from './Conversation'
 
 let socket
 
@@ -25,17 +26,22 @@ const Chat = () => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
-		setMessages([...messages, message])
-		socket.emit('send', message)
+		if (message) {
+			console.log(message)
+			socket.emit('sendMessage', message)
+		}
 		setMessage('')
 	}
 
 	useEffect(() => {
 		socket = io('http://localhost:5000')
-		socket.on('message', (msg) => {
-			console.log(msg)
-		})
 	}, [])
+
+	useEffect(() => {
+		socket.on('message', (message) => {
+			setMessages([...messages, message])
+		})
+	}, [messages])
 
 	return (
 		<div className='chat'>
@@ -44,7 +50,7 @@ const Chat = () => {
 
 				<div className='chat__headerInfo'>
 					<h3>{selectedRoom && selectedRoom.title}</h3>
-					<p>Last seen at....</p>
+					<p>last seeing .....</p>
 				</div>
 
 				<div className='chat__headerRight'>
@@ -63,7 +69,7 @@ const Chat = () => {
 			<div className='chat__body'>
 				{messages.map((msg, i) => (
 					<React.Fragment key={i}>
-						<Message text={msg} />
+						<Message content={msg} />
 					</React.Fragment>
 				))}
 

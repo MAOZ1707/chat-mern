@@ -20,6 +20,10 @@ const SideBar = () => {
 		loadRooms('608d8c00d178e828a020b489')
 	}, [])
 
+	const createRoom = () => {
+		console.log('move to create room')
+	}
+
 	return (
 		<div className='sidebar'>
 			<div className='sidebar__header'>
@@ -31,7 +35,7 @@ const SideBar = () => {
 					<IconButton>
 						<ChatOutlinedIcon fontSize='small' />
 					</IconButton>
-					<IconButton>
+					<IconButton onClick={createRoom}>
 						<AddOutlined />
 					</IconButton>
 				</div>

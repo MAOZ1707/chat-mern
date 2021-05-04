@@ -6,6 +6,8 @@ const chalk = require('chalk')
 const dotenv = require('dotenv')
 dotenv.config({path: './config.env'})
 
+const {generateMessage} = require('./utils/generateMessage')
+
 const app = express()
 const httpServer = require('http').createServer(app)
 const io = require('socket.io')(httpServer, {cors: {origin: '*'}})
@@ -29,11 +31,18 @@ app.all('*', (req, res, next) => {
 })
 
 io.on('connection', (socket) => {
-	socket.emit('message', 'welcome')
+	//  user has joined
+	socket.emit('message', generateMessage('welcome'))
+	socket.broadcast.emit('message', generateMessage('new user has joined'))
 
-	socket.on('send', (data) => {
-		console.log(data)
-		io.emit('message', data)
+	//  send message
+	socket.on('sendMessage', (data) => {
+		io.emit('message', generateMessage(data))
+	})
+
+	//  user left the chat
+	socket.on('disconnect', () => {
+		io.emit('message', generateMessage('user left'))
 	})
 })
 

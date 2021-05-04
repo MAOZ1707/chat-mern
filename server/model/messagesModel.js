@@ -12,6 +12,7 @@ const messagesModel = new mongoose.Schema({
 	},
 	conversationId: {
 		type: mongoose.Types.ObjectId,
+		ref: 'Rooms',
 	},
 })
 
