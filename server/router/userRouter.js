@@ -2,8 +2,42 @@ const express = require('express')
 const usersBL = require('../BL/usersBL')
 const authBL = require('../BL/authBL')
 const AppError = require('../utils/appError')
+const jwt = require('jsonwebtoken')
+
+const validateToken = require('../middleware/validateToken')
 
 const router = express.Router()
+
+const signToken = (id) => jwt.sign({id: id}, process.env.JWT_SECRET)
+
+router.post('/signup', async (req, res, next) => {
+	try {
+		const userInfo = req.body
+		let user = await authBL.signUp(userInfo)
+
+		const token = signToken(user._id)
+
+		res.json({token, user: user})
+	} catch (error) {
+		res.json({error: error})
+	}
+})
+
+router.post('/login', async (req, res, next) => {
+	try {
+		const userInfo = req.body
+
+		let user = await authBL.login(userInfo)
+
+		const token = signToken(user._id)
+
+		res.json({token, user: user})
+	} catch (error) {
+		res.json({error: error})
+	}
+})
+
+router.use(validateToken)
 
 router.get('/', async (req, res, next) => {
 	try {
@@ -30,29 +64,6 @@ router.get('/get-user', async (req, res, next) => {
 		res.json({user})
 	} catch (error) {
 		return next(new AppError('Could not find user', 404))
-	}
-})
-
-router.post('/signup', async (req, res, next) => {
-	try {
-		const userInfo = req.body
-		let user = await authBL.signUp(userInfo)
-		res.json({user: user})
-	} catch (error) {
-		res.json({error: error})
-	}
-})
-
-router.post('/login', async (req, res, next) => {
-	try {
-		const userInfo = req.body
-		console.log(userInfo)
-
-		let user = await authBL.login(userInfo)
-
-		res.json({user: user})
-	} catch (error) {
-		res.json({error: error})
 	}
 })
 
