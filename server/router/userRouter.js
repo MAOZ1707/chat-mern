@@ -37,6 +37,7 @@ router.post('/login', async (req, res, next) => {
 	}
 })
 
+//  Validation
 router.use(validateToken)
 
 router.get('/', async (req, res, next) => {
@@ -52,16 +53,23 @@ router.get('/', async (req, res, next) => {
 	}
 })
 
-router.get('/get-user', async (req, res, next) => {
-	let userId = req.body.id
-
+router.get('/get-user/:id', async (req, res, next) => {
+	let userId = req.params.id
 	try {
 		let user = await usersBL.getUser(userId)
-		if (!user) {
-			res.json({})
+
+		if (req.user._id.toString() !== user._id.toString()) {
+			return next(new AppError('You dont have permission please log in', 401))
 		}
 
-		res.json({user})
+		res.json({
+			user: {
+				rooms: user.rooms,
+				name: user.name,
+				email: user.email,
+				friends: user.friends,
+			},
+		})
 	} catch (error) {
 		return next(new AppError('Could not find user', 404))
 	}

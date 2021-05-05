@@ -8,12 +8,25 @@ import {AddOutlined, DonutLargeOutlined} from '@material-ui/icons'
 import ChatOutlinedIcon from '@material-ui/icons/ChatOutlined'
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined'
 import {Avatar, IconButton} from '@material-ui/core'
+import {makeStyles} from '@material-ui/core/styles'
 
 import './SideBar.css'
+
+const useStyles = makeStyles((theme) => ({
+	small: {
+		width: theme.spacing(3),
+		height: theme.spacing(3),
+	},
+	large: {
+		width: theme.spacing(6),
+		height: theme.spacing(6),
+	},
+}))
 
 const SideBar = () => {
 	const {loadUsers} = useUsers()
 	const {loadRooms, rooms} = useRooms()
+	const classes = useStyles()
 
 	useEffect(() => {
 		loadUsers()
@@ -27,7 +40,8 @@ const SideBar = () => {
 	return (
 		<div className='sidebar'>
 			<div className='sidebar__header'>
-				<Avatar alt='Remy Sharp' src='/static/images/avatar/1.jpg' />
+				{/* <Avatar alt='MC' src='/static/images/avatar/1.jpg' /> */}
+				<Avatar className={classes.large}>MC</Avatar>
 				<div className='sidebar__headerRight'>
 					<IconButton>
 						<DonutLargeOutlined fontSize='small' />

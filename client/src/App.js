@@ -12,14 +12,16 @@ import {RoomsProvider} from './context/roomsContext'
 import Login from './components/Auth/Login'
 import SignUp from './components/Auth/SignUp'
 
+import {useAuth} from './context/authContext'
+
 import './App.css'
 
 function App() {
-	let isLogin = false
+	const {token} = useAuth()
 
 	let routes
 
-	if (isLogin) {
+	if (token) {
 		routes = (
 			<Switch>
 				<Route exact path='/'>

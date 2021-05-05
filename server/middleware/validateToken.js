@@ -4,11 +4,13 @@ const Users = require('../model/usersModel')
 
 module.exports = async (req, res, next) => {
 	let token
-	const {authorization} = req.headers
 
-	// data shaping
-	if (authorization && authorization.startsWith('Bearer')) {
-		token = authorization.split(' ')[1]
+	console.log(req.headers)
+	if (
+		req.headers.authorization &&
+		req.headers.authorization.startsWith('Bearer ')
+	) {
+		token = req.headers.authorization.split(' ')[1]
 	}
 
 	console.log(token)
@@ -22,7 +24,6 @@ module.exports = async (req, res, next) => {
 	let decoded
 	try {
 		decoded = jwt.verify(token, process.env.JWT_SECRET)
-		console.log(decoded)
 	} catch (error) {
 		return next(new AppError('Authentication failed!', 403))
 	}

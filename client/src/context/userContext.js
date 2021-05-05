@@ -20,7 +20,6 @@ export function UsersProvider({id, children}) {
 	const value = {
 		loadUsers,
 		users,
-		loginUser: id,
 	}
 
 	return <UsersContext.Provider value={value}>{children}</UsersContext.Provider>
