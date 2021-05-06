@@ -5,20 +5,21 @@ const Users = require('../model/usersModel')
 module.exports = async (req, res, next) => {
 	let token
 
-	console.log(req.headers)
-	if (
-		req.headers.authorization &&
-		req.headers.authorization.startsWith('Bearer ')
-	) {
-		token = req.headers.authorization.split(' ')[1]
-	}
+	try {
+		if (
+			req.headers.authorization &&
+			req.headers.authorization.startsWith('Bearer ')
+		) {
+			token = req.headers.authorization.split(' ')[1]
+		}
 
-	console.log(token)
-
-	if (!token) {
-		return next(
-			new AppError('You are not logged in! Please log in to get access', 401),
-		)
+		if (!token) {
+			return next(
+				new AppError('You are not logged in! Please log in to get access', 401),
+			)
+		}
+	} catch (error) {
+		console.log(error)
 	}
 
 	let decoded

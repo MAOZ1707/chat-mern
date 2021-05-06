@@ -13,6 +13,7 @@ import {
 
 import './Chat.css'
 import Message from './Message'
+import {useAuth} from '../../context/authContext'
 
 import io from 'socket.io-client'
 import Conversation from './Conversation'
@@ -23,11 +24,11 @@ const Chat = () => {
 	const [message, setMessage] = useState('')
 	const [messages, setMessages] = useState([])
 	const {selectedRoom} = useRooms()
+	const {loggedUser} = useAuth()
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
 		if (message) {
-			console.log(message)
 			socket.emit('sendMessage', message)
 		}
 		setMessage('')

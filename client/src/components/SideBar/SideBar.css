@@ -14,13 +14,17 @@
 	justify-content: center;
 	min-width: 10vw;
 }
+.sidebar__link {
+	color: #696868;
+}
 
 .sidebar__search {
 	display: flex;
 	align-items: center;
-	background-color: #f6f6f6;
-	height: 40px;
+	background-color: #f8f6f6;
+	height: 60px;
 	padding: 10px;
+	margin-top: 10px;
 }
 
 .sidebar__searchContainer {
@@ -40,5 +44,5 @@
 .sidebar__chat {
 	flex: 1;
 	background-color: white;
-	overflow: hidden;
+	overflow: scroll;
 }

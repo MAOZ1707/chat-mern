@@ -28,10 +28,24 @@ exports.getRoomByUserId = (userId) => {
 
 exports.createRoom = (room) => {
 	return new Promise(async (resolve, reject) => {
-		if (!room) reject('something went wrong')
+		if (!room) reject('Could not create room, Please check your credentials')
+
+		let checkRoomName
+		try {
+			let userRooms = await Rooms.find({admin: room.admin})
+			checkRoomName = userRooms.filter(
+				(existingRoom) => existingRoom.title === room.title,
+			)
+		} catch (error) {
+			reject('Something went wrong please try again later')
+		}
+
+		if (checkRoomName && checkRoomName.length > 0) {
+			reject('Room name must be unique!')
+		}
 
 		let newRoom = await Rooms.create({
-			created: new Date().toISOString(),
+			created: room.created,
 			title: room.title,
 			users: [room.admin],
 			admin: room.admin,

@@ -15,6 +15,7 @@ import SignUp from './components/Auth/SignUp'
 import {useAuth} from './context/authContext'
 
 import './App.css'
+import CreateRoom from './components/Rooms/CreateRoom'
 
 function App() {
 	const {token} = useAuth()
@@ -27,6 +28,9 @@ function App() {
 				<Route exact path='/'>
 					<SideBar />
 					<Chat />
+				</Route>
+				<Route exact path='/create-room'>
+					<CreateRoom />
 				</Route>
 				<Redirect exact to='/' />
 			</Switch>

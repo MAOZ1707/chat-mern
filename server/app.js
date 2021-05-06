@@ -7,6 +7,7 @@ const dotenv = require('dotenv')
 dotenv.config({path: './config.env'})
 
 const {generateMessage} = require('./utils/generateMessage')
+const {sendMessage, userJoin, joinToRoom} = require('./BL/messagesBL')
 
 const app = express()
 const httpServer = require('http').createServer(app)
@@ -31,14 +32,9 @@ app.all('*', (req, res, next) => {
 })
 
 io.on('connection', (socket) => {
-	//  user has joined
-	socket.emit('message', generateMessage('welcome'))
-	socket.broadcast.emit('message', generateMessage('new user has joined'))
-
-	//  send message
-	socket.on('sendMessage', (data) => {
-		io.emit('message', generateMessage(data))
-	})
+	userJoin(socket)
+	sendMessage(socket, io)
+	joinToRoom(socket, io)
 
 	//  user left the chat
 	socket.on('disconnect', () => {

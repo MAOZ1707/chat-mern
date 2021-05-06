@@ -1,16 +1,19 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 
-import SideBarChat from './SideBarChat'
+import Rooms from '../Rooms/Rooms'
+
 import {useUsers} from '../../context/userContext'
 import {useRooms} from '../../context/roomsContext'
+import {useAuth} from '../../context/authContext'
 
-import {AddOutlined, DonutLargeOutlined} from '@material-ui/icons'
+import {AddOutlined, SupervisorAccount} from '@material-ui/icons'
 import ChatOutlinedIcon from '@material-ui/icons/ChatOutlined'
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined'
 import {Avatar, IconButton} from '@material-ui/core'
 import {makeStyles} from '@material-ui/core/styles'
 
 import './SideBar.css'
+import CreateRoom from '../Rooms/CreateRoom'
 
 const useStyles = makeStyles((theme) => ({
 	small: {
@@ -24,32 +27,36 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const SideBar = () => {
+	const [addRoom, setAddRoom] = useState(false)
+
 	const {loadUsers} = useUsers()
 	const {loadRooms, rooms} = useRooms()
 	const classes = useStyles()
+	const {userId} = useAuth()
+
+	console.log(userId)
 
 	useEffect(() => {
 		loadUsers()
-		loadRooms('608d8c00d178e828a020b489')
-	}, [])
+		loadRooms(userId)
+	}, [userId])
 
-	const createRoom = () => {
-		console.log('move to create room')
+	const handleCreateRoom = () => {
+		setAddRoom(true)
 	}
 
 	return (
 		<div className='sidebar'>
 			<div className='sidebar__header'>
-				{/* <Avatar alt='MC' src='/static/images/avatar/1.jpg' /> */}
 				<Avatar className={classes.large}>MC</Avatar>
 				<div className='sidebar__headerRight'>
 					<IconButton>
-						<DonutLargeOutlined fontSize='small' />
+						<SupervisorAccount fontSize='small' />
 					</IconButton>
 					<IconButton>
 						<ChatOutlinedIcon fontSize='small' />
 					</IconButton>
-					<IconButton onClick={createRoom}>
+					<IconButton onClick={handleCreateRoom}>
 						<AddOutlined />
 					</IconButton>
 				</div>
@@ -63,12 +70,7 @@ const SideBar = () => {
 			</div>
 
 			<div className='sidebar__chat'>
-				{rooms &&
-					rooms.map((room) => (
-						<React.Fragment key={room._id}>
-							<SideBarChat room={room} />
-						</React.Fragment>
-					))}
+				{addRoom ? <CreateRoom close={setAddRoom} /> : <Rooms rooms={rooms} />}
 			</div>
 		</div>
 	)

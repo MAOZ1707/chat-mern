@@ -23,6 +23,7 @@ router.get('/user/:id', async (req, res, next) => {
 })
 
 router.post('/create', async (req, res, next) => {
+	console.log(req.body)
 	try {
 		const room = await roomsBL.createRoom(req.body)
 		if (!room) return next(new AppError('no room', 404))

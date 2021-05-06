@@ -1,9 +1,14 @@
 const mongoose = require('mongoose')
 
 const roomsModel = new mongoose.Schema({
-	created: Date,
+	created: {
+		type: String,
+	},
 	users: [{type: mongoose.Types.ObjectId, ref: 'Users'}],
-	title: String,
+	title: {
+		type: String,
+		require,
+	},
 	admin: mongoose.Types.ObjectId,
 })
 
