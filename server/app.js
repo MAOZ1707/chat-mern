@@ -7,7 +7,7 @@ const dotenv = require('dotenv')
 dotenv.config({path: './config.env'})
 
 const {generateMessage} = require('./utils/generateMessage')
-const {sendMessage, userJoin, joinToRoom} = require('./BL/messagesBL')
+const {sendMessage, joinToRoom} = require('./BL/messagesBL')
 
 const app = express()
 const httpServer = require('http').createServer(app)
@@ -32,9 +32,30 @@ app.all('*', (req, res, next) => {
 })
 
 io.on('connection', (socket) => {
-	userJoin(socket)
-	sendMessage(socket, io)
-	joinToRoom(socket, io)
+	// sendMessage(socket, io)
+	// joinToRoom(socket)
+	socket.on('join', (room) => {
+		console.log(room.title)
+		let roomName = room.title.trim()
+		socket.join(roomName)
+
+		socket.emit('message', generateMessage('hey user!'))
+		socket.broadcast.to(room.title).emit('message', generateMessage(`hello`))
+	})
+
+	socket.on('sendMessage', async (data) => {
+		let roomName = data.room.trim()
+		try {
+			console.log(data)
+			console.log(roomName)
+
+			res.json({
+				message: data,
+			})
+		} catch (error) {}
+
+		io.to(roomName).emit('message', data.text)
+	})
 
 	//  user left the chat
 	socket.on('disconnect', () => {

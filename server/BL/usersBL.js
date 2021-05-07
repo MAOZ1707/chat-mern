@@ -23,7 +23,7 @@ exports.getUser = (userId) => {
 
 		Users.findById({_id: userId}, (err, user) => {
 			if (err) {
-				reject(err)
+				reject('Could not find user')
 			} else {
 				resolve(user)
 			}

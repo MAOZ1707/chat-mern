@@ -32,7 +32,7 @@ export function AuthProvider({children}) {
 		const fetchData = async () => {
 			try {
 				const getData = await axios({
-					url: `http://localhost:5000/users/get-user/${userId}`,
+					url: `http://localhost:5000/users/user/${userId}`,
 					method: 'GET',
 					headers: {
 						'Content-Type': 'application/json',

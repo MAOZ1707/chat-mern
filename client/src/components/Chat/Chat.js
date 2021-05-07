@@ -26,10 +26,17 @@ const Chat = () => {
 	const {selectedRoom} = useRooms()
 	const {loggedUser} = useAuth()
 
+	console.log(selectedRoom)
+
 	const handleSubmit = (e) => {
 		e.preventDefault()
 		if (message) {
-			socket.emit('sendMessage', message)
+			let x = {
+				room: selectedRoom.title,
+				sender: loggedUser.name,
+				text: message,
+			}
+			socket.emit('sendMessage', x)
 		}
 		setMessage('')
 	}
@@ -67,36 +74,42 @@ const Chat = () => {
 				</div>
 			</div>
 
-			<div className='chat__body'>
-				{messages.map((msg, i) => (
-					<React.Fragment key={i}>
-						<Message content={msg} />
-					</React.Fragment>
-				))}
+			{selectedRoom && (
+				<>
+					<div className='chat__body'>
+						{messages.map((msg, i) => (
+							<React.Fragment key={i}>
+								<Message content={msg} />
+							</React.Fragment>
+						))}
 
-				<p className='chat__message chat__receiver'>
-					<span className='chat__name'>Maoz</span>
-					This is a message
-					<span className='chat__timestamp'>{new Date().toUTCString()}</span>
-				</p>
-			</div>
+						<p className='chat__message chat__receiver'>
+							<span className='chat__name'>Maoz</span>
+							This is a message
+							<span className='chat__timestamp'>
+								{new Date().toUTCString()}
+							</span>
+						</p>
+					</div>
 
-			<div className='chat__footer'>
-				<InsertEmoticon />
-				<form onSubmit={handleSubmit}>
-					<input
-						type='text'
-						placeholder='Type a message'
-						onChange={(e) => setMessage(e.target.value)}
-						value={message}
-					/>
-					<button type='submit' onSubmit={handleSubmit}>
-						<IconButton>
-							<SendOutlined />
-						</IconButton>
-					</button>
-				</form>
-			</div>
+					<div className='chat__footer'>
+						<InsertEmoticon />
+						<form onSubmit={handleSubmit}>
+							<input
+								type='text'
+								placeholder='Type a message'
+								onChange={(e) => setMessage(e.target.value)}
+								value={message}
+							/>
+							<button type='submit' onSubmit={handleSubmit}>
+								<IconButton>
+									<SendOutlined />
+								</IconButton>
+							</button>
+						</form>
+					</div>
+				</>
+			)}
 		</div>
 	)
 }

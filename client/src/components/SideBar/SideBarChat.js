@@ -12,12 +12,10 @@ let socket = io('http://localhost:5000')
 const SideBarChat = ({room}) => {
 	const {chooseRoom} = useRooms()
 
-	console.log(room)
-
 	const selectedRoom = () => {
 		chooseRoom(room._id)
 
-		socket.emit('join', {room: room.title, admin: room.admin})
+		socket.emit('join', room)
 	}
 
 	return (
