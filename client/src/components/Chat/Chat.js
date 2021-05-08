@@ -30,13 +30,17 @@ const Chat = () => {
 
 	const ENDPOINT = 'http://localhost:5000'
 
+	console.log(loggedUser)
+
 	useEffect(() => {
 		socket = io(ENDPOINT)
 	}, [ENDPOINT])
 
 	useEffect(() => {
-		socket.emit('updateUsers')
-	}, [])
+		if (loggedUser) {
+			socket.emit('userJoin', loggedUser.name)
+		}
+	}, [loggedUser])
 
 	useEffect(() => {
 		if (selectedRoom) {
@@ -62,10 +66,12 @@ const Chat = () => {
 			])
 		})
 
-		socket.on('userList', (userList) => {
-			setChatUsers(userList)
-			setMessage({name: socket.id, text: message.text})
-		})
+		if (loggedUser) {
+			socket.on('userList', (userList) => {
+				setChatUsers(userList)
+				setMessage({name: loggedUser.name, text: message.text})
+			})
+		}
 	}, [message.text, messageList])
 
 	const handleChange = (e) => {
@@ -80,7 +86,7 @@ const Chat = () => {
 			room: selectedRoom.title,
 		}
 		socket.emit('newMessage', newMessage)
-		setMessage({name: socket.id, text: ''})
+		setMessage({name: loggedUser.name, text: ''})
 	}
 
 	return (

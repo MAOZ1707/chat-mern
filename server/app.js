@@ -31,15 +31,16 @@ app.all('*', (req, res, next) => {
 	next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404))
 })
 
-let users = []
+let users = {}
 io.on('connection', (socket) => {
-	console.log(`hello from the server! Socket id: ${socket.id}`)
-	users.push(socket.id)
-	io.emit('userList', users)
-	console.log(`users after connections ${users}`)
+	console.log(`hello from the server! Socket id: ${users[socket.id]}`)
+	// users.push(socket.id)
+	// io.emit('userList', users)
+	// console.log(`users after connections ${users}`)
 
-	socket.on('updateUsers', () => {
-		io.emit('userList', users)
+	socket.on('userJoin', (username) => {
+		users[socket.id] = username
+		io.emit('userList', [...new Set(Object.values(users))])
 	})
 
 	socket.on('newMessage', (newMessage) => {
@@ -56,21 +57,20 @@ io.on('connection', (socket) => {
 
 		io.to(leaveRoom).emit('newMessage', {
 			name: 'NEWS',
-			text: `${socket.id} has left`,
+			text: `${users[socket.id]} has left`,
 		})
 		io.to(newRoom).emit('newMessage', {
 			name: 'NEWS',
-			text: `${socket.id} has join `,
+			text: `${users[socket.id]} has join `,
 		})
 		socket.join(newRoom)
 	})
 
 	//  user left the chat
 	socket.on('disconnect', () => {
-		console.log('user left')
-		io.emit('userList', users)
-		users = users.filter((user) => user !== socket.id)
-		io.emit('message', generateMessage('user left'))
+		delete users[socket.id]
+
+		io.emit('userList', [...new Set(Object.values(users))])
 	})
 })
 
