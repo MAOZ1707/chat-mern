@@ -30,8 +30,6 @@ const Chat = () => {
 
 	const ENDPOINT = 'http://localhost:5000'
 
-	console.log(loggedUser)
-
 	useEffect(() => {
 		socket = io(ENDPOINT)
 	}, [ENDPOINT])
@@ -120,14 +118,6 @@ const Chat = () => {
 								<Message content={msg} send={loggedUser.name} />
 							</React.Fragment>
 						))}
-
-						<p className='chat__message chat__receiver'>
-							<span className='chat__name'>Maoz</span>
-							This is a message
-							<span className='chat__timestamp'>
-								{new Date().toUTCString()}
-							</span>
-						</p>
 					</div>
 
 					<div className='chat__footer'>

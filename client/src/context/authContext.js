@@ -1,5 +1,11 @@
 import axios from 'axios'
-import React, {useCallback, useContext, useEffect, useState} from 'react'
+import React, {
+	useCallback,
+	useContext,
+	useEffect,
+	useLayoutEffect,
+	useState,
+} from 'react'
 
 const AuthContext = React.createContext()
 
@@ -22,13 +28,20 @@ export function AuthProvider({children}) {
 		)
 	}, [])
 
+	useEffect(() => {
+		const storageData = JSON.parse(localStorage.getItem('chat-user'))
+		if (storageData && storageData.token) {
+			login(storageData.userId, storageData.token)
+		}
+	}, [login])
+
 	const logout = useCallback(() => {
 		setToken(null)
 		setUserId(null)
 		localStorage.removeItem('chat-user')
 	}, [])
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		const fetchData = async () => {
 			if (userId) {
 				try {
@@ -48,13 +61,6 @@ export function AuthProvider({children}) {
 		}
 		fetchData()
 	}, [token, userId])
-
-	useEffect(() => {
-		const storageData = JSON.parse(localStorage.getItem('chat-user'))
-		if (storageData && storageData.token) {
-			login(storageData.userId, storageData.token)
-		}
-	}, [login])
 
 	const value = {
 		login,

@@ -34,12 +34,10 @@ app.all('*', (req, res, next) => {
 let users = {}
 io.on('connection', (socket) => {
 	console.log(`hello from the server! Socket id: ${users[socket.id]}`)
-	// users.push(socket.id)
-	// io.emit('userList', users)
-	// console.log(`users after connections ${users}`)
 
 	socket.on('userJoin', (username) => {
 		users[socket.id] = username
+		socket.join(username)
 		io.emit('userList', [...new Set(Object.values(users))])
 	})
 
