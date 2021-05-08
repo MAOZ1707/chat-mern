@@ -21,35 +21,67 @@ import Conversation from './Conversation'
 let socket
 
 const Chat = () => {
-	const [message, setMessage] = useState('')
-	const [messages, setMessages] = useState([])
+	const [message, setMessage] = useState({name: '', text: '', room: ''})
+	const [messageList, setMessageList] = useState([])
 	const {selectedRoom} = useRooms()
 	const {loggedUser} = useAuth()
+	const [chatUsers, setChatUsers] = useState([])
+	const [oldRoom, setOldRoom] = useState('')
 
-	console.log(selectedRoom)
-
-	const handleSubmit = (e) => {
-		e.preventDefault()
-		if (message) {
-			let x = {
-				room: selectedRoom.title,
-				sender: loggedUser.name,
-				text: message,
-			}
-			socket.emit('sendMessage', x)
-		}
-		setMessage('')
-	}
+	const ENDPOINT = 'http://localhost:5000'
 
 	useEffect(() => {
-		socket = io('http://localhost:5000')
+		socket = io(ENDPOINT)
+	}, [ENDPOINT])
+
+	useEffect(() => {
+		socket.emit('updateUsers')
 	}, [])
 
 	useEffect(() => {
-		socket.on('message', (message) => {
-			setMessages([...messages, message])
+		if (selectedRoom) {
+			socket.emit('roomEntered', {
+				leaveRoom: oldRoom,
+				newRoom: selectedRoom.title,
+			})
+			setMessageList([])
+		}
+
+		return () => {
+			if (selectedRoom) {
+				setOldRoom(selectedRoom.title)
+			}
+		}
+	}, [selectedRoom, oldRoom])
+
+	useEffect(() => {
+		socket.on('newMessage', (newMessage) => {
+			setMessageList([
+				...messageList,
+				{name: newMessage.name, text: newMessage.text},
+			])
 		})
-	}, [messages])
+
+		socket.on('userList', (userList) => {
+			setChatUsers(userList)
+			setMessage({name: socket.id, text: message.text})
+		})
+	}, [message.text, messageList])
+
+	const handleChange = (e) => {
+		setMessage({...message, text: e.target.value})
+	}
+
+	const handleSubmit = (e) => {
+		e.preventDefault()
+		const newMessage = {
+			name: message.name,
+			text: message.text,
+			room: selectedRoom.title,
+		}
+		socket.emit('newMessage', newMessage)
+		setMessage({name: socket.id, text: ''})
+	}
 
 	return (
 		<div className='chat'>
@@ -77,9 +109,9 @@ const Chat = () => {
 			{selectedRoom && (
 				<>
 					<div className='chat__body'>
-						{messages.map((msg, i) => (
+						{messageList.map((msg, i) => (
 							<React.Fragment key={i}>
-								<Message content={msg} />
+								<Message content={msg} send={loggedUser.name} />
 							</React.Fragment>
 						))}
 
@@ -98,8 +130,8 @@ const Chat = () => {
 							<input
 								type='text'
 								placeholder='Type a message'
-								onChange={(e) => setMessage(e.target.value)}
-								value={message}
+								onChange={handleChange}
+								value={message.text}
 							/>
 							<button type='submit' onSubmit={handleSubmit}>
 								<IconButton>

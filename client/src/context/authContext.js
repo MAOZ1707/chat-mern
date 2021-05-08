@@ -30,19 +30,21 @@ export function AuthProvider({children}) {
 
 	useEffect(() => {
 		const fetchData = async () => {
-			try {
-				const getData = await axios({
-					url: `http://localhost:5000/users/user/${userId}`,
-					method: 'GET',
-					headers: {
-						'Content-Type': 'application/json',
-						'Access-Control-Allow-Origin': '*',
-						Authorization: 'Bearer ' + token,
-					},
-				})
-				const currentUser = getData.data
-				setLoggedUser(currentUser.user)
-			} catch (error) {}
+			if (userId) {
+				try {
+					const getData = await axios({
+						url: `http://localhost:5000/users/user/${userId}`,
+						method: 'GET',
+						headers: {
+							'Content-Type': 'application/json',
+							'Access-Control-Allow-Origin': '*',
+							// Authorization: 'Bearer ' + token,
+						},
+					})
+					const currentUser = getData.data
+					setLoggedUser(currentUser.user)
+				} catch (error) {}
+			}
 		}
 		fetchData()
 	}, [token, userId])

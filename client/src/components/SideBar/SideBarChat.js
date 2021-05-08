@@ -1,21 +1,15 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import {Avatar} from '@material-ui/core'
 
 import {useRooms} from '../../context/roomsContext'
 
-import io from 'socket.io-client'
-
 import './SideBarChat.css'
-
-let socket = io('http://localhost:5000')
 
 const SideBarChat = ({room}) => {
 	const {chooseRoom} = useRooms()
 
-	const selectedRoom = () => {
+	const selectedRoom = (e) => {
 		chooseRoom(room._id)
-
-		socket.emit('join', room)
 	}
 
 	return (

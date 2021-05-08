@@ -31,34 +31,45 @@ app.all('*', (req, res, next) => {
 	next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404))
 })
 
+let users = []
 io.on('connection', (socket) => {
-	// sendMessage(socket, io)
-	// joinToRoom(socket)
-	socket.on('join', (room) => {
-		console.log(room.title)
-		let roomName = room.title.trim()
-		socket.join(roomName)
+	console.log(`hello from the server! Socket id: ${socket.id}`)
+	users.push(socket.id)
+	io.emit('userList', users)
+	console.log(`users after connections ${users}`)
 
-		socket.emit('message', generateMessage('hey user!'))
-		socket.broadcast.to(room.title).emit('message', generateMessage(`hello`))
+	socket.on('updateUsers', () => {
+		io.emit('userList', users)
 	})
 
-	socket.on('sendMessage', async (data) => {
-		let roomName = data.room.trim()
-		try {
-			console.log(data)
-			console.log(roomName)
+	socket.on('newMessage', (newMessage) => {
+		io.to(newMessage.room).emit('newMessage', {
+			name: newMessage.name,
+			text: newMessage.text,
+		})
+	})
 
-			res.json({
-				message: data,
-			})
-		} catch (error) {}
+	socket.on('roomEntered', ({leaveRoom, newRoom}) => {
+		console.log(leaveRoom)
 
-		io.to(roomName).emit('message', data.text)
+		socket.leave(leaveRoom)
+
+		io.to(leaveRoom).emit('newMessage', {
+			name: 'NEWS',
+			text: `${socket.id} has left`,
+		})
+		io.to(newRoom).emit('newMessage', {
+			name: 'NEWS',
+			text: `${socket.id} has join `,
+		})
+		socket.join(newRoom)
 	})
 
 	//  user left the chat
 	socket.on('disconnect', () => {
+		console.log('user left')
+		io.emit('userList', users)
+		users = users.filter((user) => user !== socket.id)
 		io.emit('message', generateMessage('user left'))
 	})
 })
