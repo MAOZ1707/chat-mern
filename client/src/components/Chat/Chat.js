@@ -18,6 +18,7 @@ import Conversation from './Conversation'
 import {useMessage} from '../../context/messageContext'
 
 import './Chat.css'
+import moment from 'moment'
 
 let socket
 
@@ -26,7 +27,7 @@ const Chat = () => {
 	const {username} = useAuth()
 	const {saveMessage, conversationMsgs} = useMessage()
 	const [message, setMessage] = useState({name: '', text: '', room: ''})
-	const [messageList, setMessageList] = useState([])
+	const [messageList, setMessageList] = useState(conversationMsgs || [])
 	const [chatUsers, setChatUsers] = useState([])
 	const [oldRoom, setOldRoom] = useState('')
 
@@ -86,10 +87,13 @@ const Chat = () => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
+
+		let format = moment(new Date()).format('HH:mm a')
 		const newMessage = {
 			name: message.name,
 			text: message.text,
 			room: selectedRoom.title,
+			time: format,
 			roomId: selectedRoom._id,
 		}
 		socket.emit('newMessage', newMessage)

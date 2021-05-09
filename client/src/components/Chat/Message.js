@@ -16,7 +16,7 @@ const Message = ({content, send}) => {
 			<span className='chat__name'>{content.name}</span>
 			{content && content.text}
 			<span className='chat__timestamp'>
-				{content && moment(content.time).format('HH:mm a')}
+				{(content && content.time) || moment(content.time).format('HH:mm a')}
 			</span>
 		</p>
 	)

@@ -8,7 +8,7 @@ const messagesModel = new mongoose.Schema({
 		type: String,
 	},
 	time: {
-		type: Date,
+		type: String,
 	},
 	conversationId: {
 		type: mongoose.Types.ObjectId,

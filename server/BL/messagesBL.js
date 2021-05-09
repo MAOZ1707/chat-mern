@@ -20,7 +20,7 @@ exports.saveMessageByRoom = (data) => {
 			let newMessage = Messages.create({
 				text: data.messages,
 				name: data.sender,
-				time: new Date().getDate(),
+				time: data.time,
 				conversationId: existingRoom._id,
 			})
 

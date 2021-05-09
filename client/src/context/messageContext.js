@@ -21,7 +21,7 @@ export function MessageProvider({children}) {
 					data: {
 						messages: data.text,
 						sender: data.name,
-						time: new Date().getDate(),
+						time: data.time,
 						conversationId: data.roomId,
 					},
 					headers: {
