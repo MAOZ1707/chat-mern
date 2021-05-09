@@ -4,13 +4,16 @@ import moment from 'moment'
 import './Chat.css'
 
 const Message = ({content, send}) => {
+	console.log(send)
+	console.log(content)
+
 	return (
 		<p
 			className={`chat__message ${
-				content.sender !== send ? 'chat__receiver' : null
+				content.name !== send ? 'chat__receiver' : null
 			} `}
 		>
-			<span className='chat__name'>{content.sender}</span>
+			<span className='chat__name'>{content.name}</span>
 			{content && content.text}
 			<span className='chat__timestamp'>
 				{content && moment(content.time).format('HH:mm a')}

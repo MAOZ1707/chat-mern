@@ -4,6 +4,7 @@ import Message from './Message'
 import './Chat.css'
 
 const Conversation = ({messageList, send}) => {
+	console.log(send)
 	return (
 		<div className='chat__body'>
 			{messageList &&

@@ -23,14 +23,12 @@ let socket
 
 const Chat = () => {
 	const {selectedRoom} = useRooms()
-	const {loggedUser, username} = useAuth()
+	const {username} = useAuth()
 	const {saveMessage, conversationMsgs} = useMessage()
 	const [message, setMessage] = useState({name: '', text: '', room: ''})
 	const [messageList, setMessageList] = useState([])
 	const [chatUsers, setChatUsers] = useState([])
 	const [oldRoom, setOldRoom] = useState('')
-
-	console.log(username)
 
 	const ENDPOINT = 'http://localhost:5000'
 

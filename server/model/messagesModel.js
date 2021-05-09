@@ -4,7 +4,7 @@ const messagesModel = new mongoose.Schema({
 	text: {
 		type: String,
 	},
-	sender: {
+	name: {
 		type: String,
 	},
 	time: {
