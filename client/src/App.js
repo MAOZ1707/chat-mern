@@ -16,6 +16,7 @@ import {useAuth} from './context/authContext'
 
 import './App.css'
 import CreateRoom from './components/Rooms/CreateRoom'
+import {MessageProvider} from './context/messageContext'
 
 function App() {
 	const {token} = useAuth()
@@ -54,7 +55,9 @@ function App() {
 			<div className='app'>
 				<div className='app__body'>
 					<UsersProvider>
-						<RoomsProvider>{routes}</RoomsProvider>
+						<RoomsProvider>
+							<MessageProvider>{routes}</MessageProvider>
+						</RoomsProvider>
 					</UsersProvider>
 				</div>
 			</div>

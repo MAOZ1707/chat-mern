@@ -11,22 +11,26 @@ import {
 	SendOutlined,
 } from '@material-ui/icons'
 
-import './Chat.css'
-import Message from './Message'
 import {useAuth} from '../../context/authContext'
 
 import io from 'socket.io-client'
 import Conversation from './Conversation'
+import {useMessage} from '../../context/messageContext'
+
+import './Chat.css'
 
 let socket
 
 const Chat = () => {
+	const {selectedRoom} = useRooms()
+	const {loggedUser, username} = useAuth()
+	const {saveMessage, conversationMsgs} = useMessage()
 	const [message, setMessage] = useState({name: '', text: '', room: ''})
 	const [messageList, setMessageList] = useState([])
-	const {selectedRoom} = useRooms()
-	const {loggedUser} = useAuth()
 	const [chatUsers, setChatUsers] = useState([])
 	const [oldRoom, setOldRoom] = useState('')
+
+	console.log(username)
 
 	const ENDPOINT = 'http://localhost:5000'
 
@@ -35,10 +39,16 @@ const Chat = () => {
 	}, [ENDPOINT])
 
 	useEffect(() => {
-		if (loggedUser) {
-			socket.emit('userJoin', loggedUser.name)
+		if (conversationMsgs) {
+			setMessageList(conversationMsgs)
 		}
-	}, [loggedUser])
+	}, [conversationMsgs, selectedRoom])
+
+	useEffect(() => {
+		if (username) {
+			socket.emit('userJoin', username)
+		}
+	}, [username])
 
 	useEffect(() => {
 		if (selectedRoom) {
@@ -64,13 +74,13 @@ const Chat = () => {
 			])
 		})
 
-		if (loggedUser) {
+		if (username) {
 			socket.on('userList', (userList) => {
 				setChatUsers(userList)
-				setMessage({name: loggedUser.name, text: message.text})
+				setMessage({name: username, text: message.text})
 			})
 		}
-	}, [message.text, messageList])
+	}, [message.text, messageList, username])
 
 	const handleChange = (e) => {
 		setMessage({...message, text: e.target.value})
@@ -82,9 +92,12 @@ const Chat = () => {
 			name: message.name,
 			text: message.text,
 			room: selectedRoom.title,
+			roomId: selectedRoom._id,
 		}
 		socket.emit('newMessage', newMessage)
-		setMessage({name: loggedUser.name, text: ''})
+		setMessage({name: username, text: ''})
+
+		saveMessage(newMessage)
 	}
 
 	return (
@@ -112,13 +125,11 @@ const Chat = () => {
 
 			{selectedRoom && (
 				<>
-					<div className='chat__body'>
-						{messageList.map((msg, i) => (
-							<React.Fragment key={i}>
-								<Message content={msg} send={loggedUser.name} />
-							</React.Fragment>
-						))}
-					</div>
+					<Conversation
+						room={selectedRoom}
+						messageList={messageList}
+						send={username}
+					/>
 
 					<div className='chat__footer'>
 						<InsertEmoticon />

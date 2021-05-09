@@ -16,6 +16,9 @@ export function useAuth() {
 export function AuthProvider({children}) {
 	const [userId, setUserId] = useState(null)
 	const [token, setToken] = useState(null)
+	const [username, setUsername] = useState(
+		JSON.parse(localStorage.getItem('username')) || '',
+	)
 	const [loggedUser, setLoggedUser] = useState(null)
 
 	const login = useCallback((uID, token) => {
@@ -26,6 +29,10 @@ export function AuthProvider({children}) {
 			'chat-user',
 			JSON.stringify({userId: uID, token: token}),
 		)
+	}, [])
+
+	const saveUserName = useCallback((user) => {
+		setUsername(localStorage.setItem('username', JSON.stringify(user.name)))
 	}, [])
 
 	useEffect(() => {
@@ -41,33 +48,33 @@ export function AuthProvider({children}) {
 		localStorage.removeItem('chat-user')
 	}, [])
 
-	useLayoutEffect(() => {
-		const fetchData = async () => {
-			if (userId) {
-				try {
-					const getData = await axios({
-						url: `http://localhost:5000/users/user/${userId}`,
-						method: 'GET',
-						headers: {
-							'Content-Type': 'application/json',
-							'Access-Control-Allow-Origin': '*',
-							// Authorization: 'Bearer ' + token,
-						},
-					})
-					const currentUser = getData.data
-					setLoggedUser(currentUser.user)
-				} catch (error) {}
-			}
+	const fetchUser = async (userId, token) => {
+		if (userId) {
+			try {
+				const getData = await axios({
+					url: `http://localhost:5000/users/user/${userId}`,
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						'Access-Control-Allow-Origin': '*',
+						// Authorization: 'Bearer ' + token,
+					},
+				})
+				const currentUser = getData.data
+				setLoggedUser(currentUser.user)
+				saveUserName(currentUser.user)
+			} catch (error) {}
 		}
-		fetchData()
-	}, [token, userId])
+	}
 
 	const value = {
 		login,
 		logout,
 		userId,
 		token,
+		fetchUser,
 		loggedUser,
+		username,
 	}
 
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

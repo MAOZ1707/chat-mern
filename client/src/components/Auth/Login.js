@@ -11,7 +11,7 @@ import './Auth.css'
 
 const Login = () => {
 	const {error, isLoading, sendRequest} = useHttp()
-	const {login, getLoggedUser} = useAuth()
+	const {login, fetchUser} = useAuth()
 
 	const formik = useFormik({
 		initialValues: {
@@ -40,7 +40,7 @@ const Login = () => {
 				)
 				const data = response.data
 				login(data.user._id, data.token)
-				getLoggedUser(data.user._id, data.token)
+				fetchUser(data.user._id, data.token)
 			} catch (error) {}
 		},
 	})

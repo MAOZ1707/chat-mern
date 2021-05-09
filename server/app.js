@@ -23,9 +23,11 @@ require('./config/database')
 // Routes
 const usersRouter = require('./router/userRouter')
 const roomsRouter = require('./router/roomsRouter')
+const messagesRouter = require('./router/messagesRouter')
 
 app.use('/users', usersRouter)
 app.use('/rooms', roomsRouter)
+app.use('/messages', messagesRouter)
 
 app.all('*', (req, res, next) => {
 	next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404))
