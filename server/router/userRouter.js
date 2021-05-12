@@ -29,6 +29,8 @@ router.post('/login', async (req, res, next) => {
 
 		let user = await authBL.login(userInfo)
 
+		console.log(user)
+
 		const token = signToken(user._id)
 
 		res.json({token, user: user})

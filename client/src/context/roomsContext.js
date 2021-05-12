@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, {useContext, useState} from 'react'
+import React, {useCallback, useContext, useEffect, useState} from 'react'
 
 const RoomsContext = React.createContext()
 
@@ -18,16 +18,13 @@ export function RoomsProvider({children}) {
 		)
 		const data = await response.data.userRooms
 		setRooms(data)
-		console.log(data)
 	}
 
-	const chooseRoom = async (roomId) => {
-		console.log(roomId)
+	const chooseRoom = useCallback(async (roomId) => {
 		const response = await axios.get(`http://localhost:5000/rooms/${roomId}`)
 		const data = await response.data.room
 		setSelectedRoom(data)
-		console.log(data)
-	}
+	}, [])
 
 	const value = {
 		loadRooms,

@@ -6,12 +6,9 @@ const chalk = require('chalk')
 const dotenv = require('dotenv')
 dotenv.config({path: './config.env'})
 
-const {generateMessage} = require('./utils/generateMessage')
-const {sendMessage, joinToRoom} = require('./BL/messagesBL')
-
 const app = express()
-const httpServer = require('http').createServer(app)
-const io = require('socket.io')(httpServer, {cors: {origin: '*'}})
+// const httpServer = require('http').createServer(app)
+// const io = require('socket.io')(httpServer, {cors: {origin: '*'}})
 
 app.use(cors({origin: true, credentials: true}))
 app.use(express.json())
@@ -33,47 +30,6 @@ app.all('*', (req, res, next) => {
 	next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404))
 })
 
-let users = {}
-io.on('connection', (socket) => {
-	console.log(`hello from the server! Socket id: ${users[socket.id]}`)
-
-	socket.on('userJoin', (username) => {
-		users[socket.id] = username
-		socket.join(username)
-		io.emit('userList', [...new Set(Object.values(users))])
-	})
-
-	socket.on('newMessage', (newMessage) => {
-		io.to(newMessage.room).emit('newMessage', {
-			name: newMessage.name,
-			text: newMessage.text,
-		})
-	})
-
-	socket.on('roomEntered', ({leaveRoom, newRoom}) => {
-		console.log(leaveRoom)
-
-		socket.leave(leaveRoom)
-
-		io.to(leaveRoom).emit('newMessage', {
-			name: 'NEWS',
-			text: `${users[socket.id]} has left`,
-		})
-		io.to(newRoom).emit('newMessage', {
-			name: 'NEWS',
-			text: `${users[socket.id]} has join `,
-		})
-		socket.join(newRoom)
-	})
-
-	//  user left the chat
-	socket.on('disconnect', () => {
-		delete users[socket.id]
-
-		io.emit('userList', [...new Set(Object.values(users))])
-	})
-})
-
 // Error handling middleware
 app.use((err, req, res, next) => {
 	console.log(chalk.redBright(err.stack))
@@ -93,6 +49,6 @@ if (process.env.PORT) {
 	port = process.env.PORT
 }
 
-httpServer.listen(port, () => {
+app.listen(port, () => {
 	console.log(chalk.magentaBright(`App running on port ${port}`))
 })

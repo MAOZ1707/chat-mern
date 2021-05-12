@@ -1,17 +1,16 @@
 import {useFormik} from 'formik'
 import React from 'react'
-import {Link} from 'react-router-dom'
 import * as Yup from 'yup'
 
-import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace'
 import {useHttp} from '../../hooks/useHttp'
 import {useAuth} from '../../context/authContext'
 
 import './Auth.css'
+import {Link} from 'react-router-dom'
 
 const Login = () => {
 	const {error, isLoading, sendRequest} = useHttp()
-	const {login, fetchUser} = useAuth()
+	const {login} = useAuth()
 
 	const formik = useFormik({
 		initialValues: {
@@ -25,7 +24,6 @@ const Login = () => {
 			email: Yup.string().email('invalid email address').required('Required'),
 		}),
 		onSubmit: async (values) => {
-			console.log(values)
 			try {
 				const response = await sendRequest(
 					'http://localhost:5000/users/login',
@@ -39,8 +37,7 @@ const Login = () => {
 					},
 				)
 				const data = response.data
-				login(data.user._id, data.token)
-				fetchUser(data.user._id, data.token)
+				login(data.user._id, data.token, data.user.name)
 			} catch (error) {}
 		},
 	})
@@ -101,12 +98,9 @@ const Login = () => {
 				</button>
 
 				<div className='auth__link'>
-					<Link to='/signup'>
-						<KeyboardBackspaceIcon
-							fontSize='large'
-							style={{color: '#fff', cursor: 'pointer'}}
-						/>
-					</Link>
+					<p>
+						Dont have account? <Link to='/signup'>Sign up</Link>
+					</p>
 				</div>
 			</form>
 		</div>

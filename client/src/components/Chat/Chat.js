@@ -31,10 +31,14 @@ const Chat = () => {
 	const [chatUsers, setChatUsers] = useState([])
 	const [oldRoom, setOldRoom] = useState('')
 
-	const ENDPOINT = 'http://localhost:5000'
+	const ENDPOINT = 'http://localhost:8000'
 
 	useEffect(() => {
 		socket = io(ENDPOINT)
+
+		return () => {
+			socket.disconnect()
+		}
 	}, [ENDPOINT])
 
 	useEffect(() => {
@@ -44,9 +48,7 @@ const Chat = () => {
 	}, [conversationMsgs, selectedRoom])
 
 	useEffect(() => {
-		if (username) {
-			socket.emit('userJoin', username)
-		}
+		socket.emit('userJoin', username)
 	}, [username])
 
 	useEffect(() => {
@@ -66,7 +68,7 @@ const Chat = () => {
 	}, [selectedRoom, oldRoom])
 
 	useEffect(() => {
-		socket.on('newMessage', (newMessage) => {
+		socket.once('newMessage', (newMessage) => {
 			setMessageList([
 				...messageList,
 				{name: newMessage.name, text: newMessage.text},

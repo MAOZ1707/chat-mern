@@ -2,27 +2,16 @@ import React from 'react'
 import {useFormik} from 'formik'
 import * as Yup from 'yup'
 
+import './Auth.css'
 import {Link} from 'react-router-dom'
 
-import './Auth.css'
-
 const Signup = () => {
-	const validate = (values) => {
-		const errors = {}
-		if (!values.name) errors.name = 'Required'
-		if (!values.email) errors.email = 'Required'
-		if (!values.password) errors.password = 'Required'
-
-		return errors
-	}
-
 	const formik = useFormik({
 		initialValues: {
 			name: '',
 			email: '',
 			password: '',
 		},
-		validate,
 		validationSchema: Yup.object({
 			name: Yup.string()
 				.max(15, 'Must be 15 characters or less')
