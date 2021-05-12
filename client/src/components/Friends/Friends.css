@@ -1,0 +1,86 @@
+.friends__container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+}
+
+.friends__form {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	padding: 10px;
+}
+
+.friends__input {
+	border: none;
+	outline: none;
+	border-bottom: 2px solid #01d293;
+	font-size: 18px;
+}
+.friends__label {
+	font-size: 14px;
+	font-weight: 500;
+	color: #696868;
+	margin-bottom: 10px;
+}
+
+.friends__title {
+	color: #242424;
+	font-size: 20px;
+	font-weight: 400;
+	margin-bottom: 10px;
+}
+
+.friends__error__wrapper {
+	width: 100%;
+	margin: 10px 0;
+}
+
+.friends__error__msg {
+	color: rgb(255, 48, 48);
+}
+
+.friends__success {
+	color: #33ef97;
+}
+
+.friends__btn {
+	box-shadow: 0px 1px 0px 0px #f0f7fa00;
+	background: linear-gradient(to bottom, #33ef97 5%, #06b882 100%);
+	border-radius: 0;
+	border: none;
+	display: inline-block;
+	cursor: pointer;
+	color: #242424;
+	font-family: Arial;
+	font-size: 16px;
+	font-weight: 600;
+	padding: 6px 24px;
+	text-decoration: none;
+	width: 100%;
+	height: 40px;
+	margin-top: 0px;
+}
+
+.friends__btn:active {
+	position: relative;
+	top: 2px;
+}
+
+.friends__link {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: 20px;
+	color: #ffff;
+	width: 100%;
+}
+
+.friends__link > button {
+	text-decoration: none;
+	background-color: transparent;
+	border: none;
+	cursor: pointer;
+}

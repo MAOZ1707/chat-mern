@@ -30,3 +30,19 @@ exports.getUser = (userId) => {
 		})
 	})
 }
+
+exports.findFriend = (email) => {
+	return new Promise((resolve, reject) => {
+		if (!email) {
+			reject('please provide user email')
+		}
+
+		Users.findOne({email: email}, (err, user) => {
+			if (err) {
+				reject('Could not find user with provided email')
+			} else {
+				resolve(user)
+			}
+		})
+	})
+}

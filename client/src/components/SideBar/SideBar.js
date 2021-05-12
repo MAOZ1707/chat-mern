@@ -1,19 +1,16 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 
 import Rooms from '../Rooms/Rooms'
-
-import {useUsers} from '../../context/userContext'
 import {useRooms} from '../../context/roomsContext'
-import {useAuth} from '../../context/authContext'
-
 import {AddOutlined, SupervisorAccount} from '@material-ui/icons'
 import ChatOutlinedIcon from '@material-ui/icons/ChatOutlined'
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined'
 import {Avatar, IconButton} from '@material-ui/core'
 import {makeStyles} from '@material-ui/core/styles'
+import CreateRoom from '../Rooms/CreateRoom'
 
 import './SideBar.css'
-import CreateRoom from '../Rooms/CreateRoom'
+import Friends from '../Friends/Friends'
 
 const useStyles = makeStyles((theme) => ({
 	small: {
@@ -26,37 +23,43 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const SideBar = () => {
-	const [addRoom, setAddRoom] = useState(false)
+const SideBar = ({username}) => {
+	const [options, seOptions] = useState('')
 
-	const {loadUsers} = useUsers()
-	const {loadRooms, rooms} = useRooms()
+	const {rooms} = useRooms()
 	const classes = useStyles()
-	const {userId} = useAuth()
 
-	console.log(userId)
+	const getUserCharacters = username.slice(0, 2).toUpperCase()
 
-	useEffect(() => {
-		loadUsers()
-		loadRooms(userId)
-	}, [userId])
+	let route
 
-	const handleCreateRoom = () => {
-		setAddRoom(true)
+	switch (options) {
+		case 'create':
+			route = <CreateRoom redirect={seOptions} />
+			break
+		case 'rooms':
+			route = <Rooms rooms={rooms} />
+			break
+		case 'friends':
+			route = <Friends />
+			break
+		default:
+			route = <Rooms rooms={rooms} />
+			break
 	}
 
 	return (
 		<div className='sidebar'>
 			<div className='sidebar__header'>
-				<Avatar className={classes.large}>MC</Avatar>
+				<Avatar className={classes.large}>{getUserCharacters}</Avatar>
 				<div className='sidebar__headerRight'>
-					<IconButton>
+					<IconButton onClick={() => seOptions('friends')}>
 						<SupervisorAccount fontSize='small' />
 					</IconButton>
-					<IconButton>
+					<IconButton onClick={() => seOptions('rooms')}>
 						<ChatOutlinedIcon fontSize='small' />
 					</IconButton>
-					<IconButton onClick={handleCreateRoom}>
+					<IconButton onClick={() => seOptions('create')}>
 						<AddOutlined />
 					</IconButton>
 				</div>
@@ -69,9 +72,7 @@ const SideBar = () => {
 				</div>
 			</div>
 
-			<div className='sidebar__chat'>
-				{addRoom ? <CreateRoom close={setAddRoom} /> : <Rooms rooms={rooms} />}
-			</div>
+			<div className='sidebar__chat'>{route}</div>
 		</div>
 	)
 }

@@ -6,12 +6,10 @@ import * as Yup from 'yup'
 import {useAuth} from '../../context/authContext'
 import {useHttp} from '../../hooks/useHttp'
 
-import {IconButton} from '@material-ui/core'
-
 import './CreateRoom.css'
 import {useRooms} from '../../context/roomsContext'
 
-const CreateRoom = ({close}) => {
+const CreateRoom = ({redirect}) => {
 	const {error, isLoading, sendRequest} = useHttp()
 	const {loadRooms} = useRooms()
 	const {token, userId} = useAuth()
@@ -43,7 +41,7 @@ const CreateRoom = ({close}) => {
 				// const {data} = response
 				if (response.statusText === 'OK') {
 					loadRooms(userId)
-					close(false)
+					redirect('chat')
 				}
 			} catch (error) {}
 		},
@@ -87,12 +85,6 @@ const CreateRoom = ({close}) => {
 				<button type='submit' className='create-room__btn'>
 					Create
 				</button>
-
-				<div className='create-room__link'>
-					<button onClick={() => close(false)}>
-						<IconButton>close</IconButton>
-					</button>
-				</div>
 			</form>
 		</div>
 	)

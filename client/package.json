@@ -1,7 +1,4 @@
 {
-	"quokka": {
-		"babel": true
-	},
 	"name": "client",
 	"version": "0.1.0",
 	"private": true,
@@ -47,7 +44,5 @@
 		]
 	},
 	"proxy": "http://localhost:5000/",
-	"devDependencies": {
-		"alias-quokka-plugin": "^0.1.0"
-	}
+	"devDependencies": {}
 }
