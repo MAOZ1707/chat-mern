@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
 
@@ -7,8 +7,9 @@ import FriendsView from './FriendsView'
 
 import './Friends.css'
 
-const Friends = () => {
+const Friends = ({ redirect }) => {
 	const { error, isLoading, sendRequest } = useHttp()
+	const [friend, setFriend] = useState(null)
 
 	const formik = useFormik({
 		initialValues: {
@@ -20,18 +21,19 @@ const Friends = () => {
 		onSubmit: async (values) => {
 			try {
 				const response = await sendRequest(
-					`http://localhost:5000/users//find-friends${'?email=' + values.email}`,
+					`http://localhost:5000/users//find-friend${'?email=' + values.email}`,
 					'GET'
 				)
 				const { data } = response
 				console.log(data)
+				setFriend(data.user)
 			} catch (error) {}
 		},
 	})
 
 	return (
 		<div className='friends__container'>
-			<h3 className='friends__title'>Friends</h3>
+			<h3 className='friends__title'>Add Friends</h3>
 			{error && <div>{error}</div>}
 			{isLoading && <div>Loading....</div>}
 			<form onSubmit={formik.handleSubmit} className='friends__form'>
@@ -64,7 +66,7 @@ const Friends = () => {
 			</form>
 
 			<div className='friends-view__wrapper'>
-				<FriendsView />
+				{friend && <FriendsView user={friend} redirect={redirect} />}
 			</div>
 		</div>
 	)

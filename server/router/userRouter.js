@@ -75,10 +75,41 @@ router.get('/user/:id', async (req, res, next) => {
 	}
 })
 
-router.get('/find-friends/', async (req, res, next) => {
+router.get('/:id/friends', async (req, res, next) => {
+	const userId = req.params.id
+	try {
+		let user = await usersBL.loadUserFriends(userId)
+
+		res.json({
+			friends: user.friends,
+		})
+	} catch (error) {
+		return next(new AppError('Could not find user friends', 404))
+	}
+})
+
+router.get('/find-friend/', async (req, res, next) => {
 	const { email } = req.query
 	try {
 		let user = await usersBL.findFriend(email)
+
+		res.json({
+			user: {
+				name: user.name,
+				email: user.email,
+			},
+		})
+	} catch (error) {
+		return next(new AppError('Could not find user', 404))
+	}
+})
+
+router.patch('/add-friend', async (req, res, next) => {
+	const { friend, admin } = req.body
+	try {
+		let user = await usersBL.addFriend(friend, admin)
+
+		console.log(user)
 
 		res.json({
 			user: {

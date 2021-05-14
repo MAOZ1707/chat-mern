@@ -26,7 +26,12 @@ const usersSchema = new mongoose.Schema({
 			ref: 'Rooms',
 		},
 	],
-	friends: [{name: String, userId: mongoose.Types.ObjectId}],
+	friends: [
+		{
+			name: String,
+			userId: mongoose.Types.ObjectId,
+		},
+	],
 })
 
 const Users = mongoose.model('Users', usersSchema)

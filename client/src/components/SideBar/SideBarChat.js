@@ -1,14 +1,14 @@
-import React, {useEffect} from 'react'
-import {Avatar} from '@material-ui/core'
+import React, { useEffect } from 'react'
+import { Avatar } from '@material-ui/core'
 
-import {useRooms} from '../../context/roomsContext'
-import {useMessage} from '../../context/messageContext'
+import { useRooms } from '../../context/roomsContext'
+import { useMessage } from '../../context/messageContext'
 
 import './SideBarChat.css'
 
-const SideBarChat = ({room}) => {
-	const {chooseRoom, selectedRoom} = useRooms()
-	const {getRoomMessages} = useMessage()
+const SideBarChat = ({ room }) => {
+	const { chooseRoom, selectedRoom } = useRooms()
+	const { getRoomMessages } = useMessage()
 
 	const roomInfo = () => {
 		chooseRoom(room._id)

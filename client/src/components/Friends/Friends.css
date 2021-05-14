@@ -48,7 +48,7 @@
 
 .friends__btn {
 	box-shadow: 0px 1px 0px 0px #f0f7fa00;
-	background: linear-gradient(to bottom, #33ef97 5%, #06b882 100%);
+	background: linear-gradient(to bottom, #33ef97 5%, #0aa859 100%);
 	border-radius: 0;
 	border: none;
 	display: inline-block;
@@ -83,4 +83,51 @@
 	background-color: transparent;
 	border: none;
 	cursor: pointer;
+}
+.friends_view {
+	display: flex;
+	padding: 10px;
+	flex-direction: column;
+	align-items: center;
+	cursor: pointer;
+	border-bottom: 1px solid #01d293;
+	flex-wrap: wrap;
+	background-color: #f1f0f0;
+}
+
+.friends_view__info > h2 {
+	font-size: 16px;
+	margin-bottom: 8px;
+}
+.friends_view__info {
+	text-transform: capitalize;
+	text-align: center;
+	margin-top: 20px;
+}
+.friends_view__footer {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: 30px;
+}
+.friends__btn_add {
+	box-shadow: 0px 1px 0px 0px #f0f7fa00;
+	background: linear-gradient(to bottom, #353636 5%, #011522 100%);
+	border-radius: 0;
+	border: none;
+	display: inline-block;
+	cursor: pointer;
+	color: #f1f1f1;
+	font-family: Arial;
+	font-size: 16px;
+	font-weight: 600;
+	padding: 6px 24px;
+	text-decoration: none;
+	width: 70%;
+	height: 40px;
+	margin-top: 0px;
+}
+.friends__btn_add:hover {
+	background: linear-gradient(to bottom, #454646 5%, #021727 100%);
 }
