@@ -17,10 +17,7 @@ exports.getRoomByUserId = (userId) => {
 		if (!existingUser) reject('Could not find user')
 
 		//  data shaping
-		const userRooms = await Rooms.find()
-			.where('_id')
-			.in(existingUser.rooms)
-			.exec()
+		const userRooms = await Rooms.find().where('_id').in(existingUser.rooms).exec()
 
 		resolve(userRooms)
 	})
@@ -32,10 +29,8 @@ exports.createRoom = (room) => {
 
 		let checkRoomName
 		try {
-			let userRooms = await Rooms.find({admin: room.admin})
-			checkRoomName = userRooms.filter(
-				(existingRoom) => existingRoom.title === room.title,
-			)
+			let userRooms = await Rooms.find({ admin: room.admin })
+			checkRoomName = userRooms.filter((existingRoom) => existingRoom.title === room.title)
 		} catch (error) {
 			reject('Something went wrong please try again later')
 		}
@@ -55,7 +50,7 @@ exports.createRoom = (room) => {
 			reject('We have a problem please try again later')
 		}
 		await Users.findByIdAndUpdate(newRoom.admin, {
-			$addToSet: {rooms: newRoom._id},
+			$addToSet: { rooms: newRoom._id },
 		})
 
 		resolve(newRoom)
@@ -72,22 +67,16 @@ exports.deleteRoom = (roomId, admin) => {
 
 		// check admin
 		if (room.admin.toString() !== admin.toString()) {
-			reject(
-				'Sorry you dont have permission !, only admin can add / delete users',
-			)
+			reject('Sorry you dont have permission !, only admin can add / delete users')
 		}
 		// delete room from user rooms
 		room.users.map(
 			async (user) =>
-				await Users.findByIdAndUpdate(
-					user._id,
-					{$pull: {rooms: roomId}},
-					(err, data) => {
-						if (err) reject(err)
+				await Users.findByIdAndUpdate(user._id, { $pull: { rooms: roomId } }, (err, data) => {
+					if (err) reject(err)
 
-						resolve(data)
-					},
-				),
+					resolve(data)
+				})
 		)
 
 		// delete room from data base
@@ -97,49 +86,50 @@ exports.deleteRoom = (roomId, admin) => {
 	})
 }
 
-exports.addUserToRoom = (roomId, userId, admin) => {
+exports.addUserToRoom = (roomId, friendEmail, admin) => {
+	console.log(roomId)
+
 	return new Promise(async (resolve, reject) => {
-		let existingUser = await Users.findById({_id: userId})
+		let existingUser = await Users.findOne({ email: friendEmail })
 		if (!existingUser) reject('Could not find user')
+
+		console.log(existingUser)
 
 		let room = await Rooms.findById(roomId)
 		if (!room) reject('Could not find room')
 
 		// check if user is admin
 		if (room.admin.toString() !== admin.toString()) {
-			reject(
-				'Sorry you dont have permission !, only admin can add / delete users',
-			)
+			reject('Sorry you dont have permission !, only admin can add / delete users')
 		}
 
 		// add room to user rooms
-		await Users.findByIdAndUpdate(
-			userId,
+		Users.findByIdAndUpdate(
+			existingUser._id,
 			{
-				$addToSet: {rooms: room._id},
-			},
-			(err, data) => {
-				if (err) reject(er)
-				resolve(data)
-			},
-		)
-
-		await Rooms.findByIdAndUpdate(
-			room._id,
-			{
-				$addToSet: {users: userId},
+				$addToSet: { rooms: room._id },
 			},
 			(err, data) => {
 				if (err) reject(err)
-				resolve(data)
-			},
+				// resolve(data)
+				Rooms.findByIdAndUpdate(
+					room._id,
+					{
+						$addToSet: { users: data._id },
+					},
+					(err, data) => {
+						if (err) reject(err)
+						resolve(data)
+					}
+				)
+			}
 		)
 	})
 }
 
 exports.removeUser = (roomId, userId, admin) => {
 	return new Promise(async (resolve, reject) => {
-		let existingUser = await Users.findById({_id: userId})
+		let existingUser = await Users.findById({ _id: userId })
 		if (!existingUser) reject('Could not find user')
 
 		let room = await Rooms.findById(roomId)
@@ -147,20 +137,18 @@ exports.removeUser = (roomId, userId, admin) => {
 
 		// check if user is admin
 		if (room.admin.toString() !== admin.toString()) {
-			reject(
-				'Sorry you dont have permission !, only admin can add / delete users',
-			)
+			reject('Sorry you dont have permission !, only admin can add / delete users')
 		}
 
 		Rooms.findByIdAndUpdate(
 			room._id,
 			{
-				$pull: {users: userId},
+				$pull: { users: userId },
 			},
 			(err, data) => {
 				if (err) reject(err)
 				resolve(data)
-			},
+			}
 		)
 	})
 }

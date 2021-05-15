@@ -3,29 +3,51 @@ import React, { useEffect } from 'react'
 import { useUsers } from '../../context/userContext'
 import { useAuth } from '../../context/authContext'
 import { useRooms } from '../../context/roomsContext'
+import { useHttp } from '../../hooks/useHttp'
+
 import { Avatar } from '@material-ui/core'
 import GroupAddIcon from '@material-ui/icons/GroupAdd'
-
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 
 import './FriendList.css'
 
 const FriendsList = () => {
+	const [anchorEl, setAnchorEl] = React.useState(null)
 	const { userFriends, loadUserFriends } = useUsers()
 	const { userId } = useAuth()
 	const { rooms } = useRooms()
+	const { sendRequest } = useHttp()
 
-	console.log(rooms)
+	console.log(userId)
+	console.log(userFriends)
 
 	useEffect(() => {
 		loadUserFriends(userId)
 	}, [userId])
 
-	const [anchorEl, setAnchorEl] = React.useState(null)
-
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget)
+	}
+
+	const inviteToRoom = async (roomId, email) => {
+		try {
+			const response = await sendRequest(
+				`/rooms/${roomId}/addUser`,
+				'patch',
+				{
+					email: email,
+					admin: userId,
+				},
+				{
+					'Content-Type': 'application/json',
+					// Authorization: 'Bearer ' + token,
+				}
+			)
+			if (response.statusText === 'OK') {
+				setAnchorEl(null)
+			}
+		} catch (error) {}
 	}
 
 	const handleClose = () => {
@@ -55,7 +77,7 @@ const FriendsList = () => {
 							onClose={handleClose}>
 							{rooms &&
 								rooms.map((room) => (
-									<MenuItem key={room._id} onClick={handleClose}>
+									<MenuItem key={room._id} onClick={() => inviteToRoom(room._id, friend.email)}>
 										{room.title}
 									</MenuItem>
 								))}
