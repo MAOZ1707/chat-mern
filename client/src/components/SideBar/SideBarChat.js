@@ -10,18 +10,18 @@ import axios from 'axios'
 
 const SideBarChat = ({ room }) => {
 	const { chooseRoom, selectedRoom } = useRooms()
-	const { getRoomMessages, conversationMsgs } = useMessage()
-	const [lastMsg, setLastMsg] = useState(null)
+	const { getRoomMessages, lastMessage } = useMessage()
+	const [roomLastMsg, setRoomLastMsg] = useState()
 
 	const roomInfo = () => {
 		chooseRoom(room._id)
 	}
 
 	useEffect(() => {
-		const response = async () => {
+		const getLastRoomMessage = async (roomId) => {
 			try {
 				const getData = await axios({
-					url: `http://localhost:5000/messages/room/${room._id}`,
+					url: `/messages/room/${roomId}`,
 					method: 'GET',
 					headers: {
 						'Content-Type': 'application/json',
@@ -32,11 +32,17 @@ const SideBarChat = ({ room }) => {
 
 				let { message } = getData.data
 				const arrOfMsg = message.map((msg) => msg.text)
-				setLastMsg(arrOfMsg[arrOfMsg.length - 1])
+				setRoomLastMsg(arrOfMsg[arrOfMsg.length - 1])
 			} catch (error) {}
 		}
-		response()
-	}, [room._id, conversationMsgs])
+		getLastRoomMessage(room._id)
+	}, [room._id])
+
+	useEffect(() => {
+		if (lastMessage && lastMessage.roomId === room._id) {
+			setRoomLastMsg(lastMessage.text)
+		}
+	}, [lastMessage, room._id])
 
 	useEffect(() => {
 		if (selectedRoom !== null) {
@@ -49,7 +55,7 @@ const SideBarChat = ({ room }) => {
 			<Avatar />
 			<div className='sidebarChat__info'>
 				<h2>{room.title}</h2>
-				<p>{lastMsg}</p>
+				<p>{roomLastMsg}</p>
 			</div>
 		</div>
 	)

@@ -57,6 +57,8 @@ export function MessageProvider({ children }) {
 		saveMessage,
 		getRoomMessages,
 		conversationMsgs,
+		setLastMessage,
+		lastMessage,
 	}
 
 	return <MessageContext.Provider value={value}>{children}</MessageContext.Provider>

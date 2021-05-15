@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 
-import {useRooms} from '../../context/roomsContext'
+import { useRooms } from '../../context/roomsContext'
 
-import {Avatar, IconButton} from '@material-ui/core'
+import { Avatar, IconButton } from '@material-ui/core'
 import {
 	AttachFile,
 	InsertEmoticon,
@@ -11,11 +11,11 @@ import {
 	SendOutlined,
 } from '@material-ui/icons'
 
-import {useAuth} from '../../context/authContext'
+import { useAuth } from '../../context/authContext'
 
 import io from 'socket.io-client'
 import Conversation from './Conversation'
-import {useMessage} from '../../context/messageContext'
+import { useMessage } from '../../context/messageContext'
 
 import './Chat.css'
 import moment from 'moment'
@@ -23,10 +23,10 @@ import moment from 'moment'
 let socket
 
 const Chat = () => {
-	const {selectedRoom} = useRooms()
-	const {username} = useAuth()
-	const {saveMessage, conversationMsgs} = useMessage()
-	const [message, setMessage] = useState({name: '', text: '', room: ''})
+	const { selectedRoom } = useRooms()
+	const { username } = useAuth()
+	const { saveMessage, conversationMsgs, setLastMessage } = useMessage()
+	const [message, setMessage] = useState({ name: '', text: '', room: '' })
 	const [messageList, setMessageList] = useState(conversationMsgs || [])
 	const [chatUsers, setChatUsers] = useState([])
 	const [oldRoom, setOldRoom] = useState('')
@@ -69,22 +69,19 @@ const Chat = () => {
 
 	useEffect(() => {
 		socket.once('newMessage', (newMessage) => {
-			setMessageList([
-				...messageList,
-				{name: newMessage.name, text: newMessage.text},
-			])
+			setMessageList([...messageList, { name: newMessage.name, text: newMessage.text }])
 		})
 
 		if (username) {
 			socket.on('userList', (userList) => {
 				setChatUsers(userList)
-				setMessage({name: username, text: message.text})
+				setMessage({ name: username, text: message.text })
 			})
 		}
 	}, [message.text, messageList, username])
 
 	const handleChange = (e) => {
-		setMessage({...message, text: e.target.value})
+		setMessage({ ...message, text: e.target.value })
 	}
 
 	const handleSubmit = (e) => {
@@ -99,8 +96,8 @@ const Chat = () => {
 			roomId: selectedRoom._id,
 		}
 		socket.emit('newMessage', newMessage)
-		setMessage({name: username, text: ''})
-
+		setMessage({ name: username, text: '' })
+		setLastMessage({ roomId: selectedRoom._id, text: message.text })
 		saveMessage(newMessage)
 	}
 
@@ -129,11 +126,7 @@ const Chat = () => {
 
 			{selectedRoom && (
 				<>
-					<Conversation
-						room={selectedRoom}
-						messageList={messageList}
-						send={username}
-					/>
+					<Conversation room={selectedRoom} messageList={messageList} send={username} />
 
 					<div className='chat__footer'>
 						<InsertEmoticon />
