@@ -74,6 +74,7 @@ const SideBar = ({ username }) => {
 					<IconButton aria-controls='simple-menu' aria-haspopup='true' onClick={handleClick}>
 						<AddOutlined />
 					</IconButton>
+
 					<Menu
 						id='simple-menu'
 						anchorEl={anchorEl}

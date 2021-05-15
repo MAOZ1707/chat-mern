@@ -1,21 +1,21 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 
 import axios from 'axios'
+
 const MessageContext = React.createContext()
 
 export function useMessage() {
 	return useContext(MessageContext)
 }
 
-export function MessageProvider({children}) {
+export function MessageProvider({ children }) {
 	const [conversationMsgs, setConversationMsgs] = useState(null)
-
-	// TODO --> GET MESSAGES FROM ROOM ID
+	const [lastMessage, setLastMessage] = useState()
 
 	const saveMessage = async (data) => {
 		if (data) {
 			try {
-				const getData = await axios({
+				await axios({
 					url: `http://localhost:5000/messages/save`,
 					method: 'POST',
 					data: {
@@ -30,8 +30,9 @@ export function MessageProvider({children}) {
 						// Authorization: 'Bearer ' + token,
 					},
 				})
-				console.log(getData.data)
-			} catch (error) {}
+			} catch (error) {
+				console.log(error)
+			}
 		}
 	}
 
@@ -58,7 +59,5 @@ export function MessageProvider({children}) {
 		conversationMsgs,
 	}
 
-	return (
-		<MessageContext.Provider value={value}>{children}</MessageContext.Provider>
-	)
+	return <MessageContext.Provider value={value}>{children}</MessageContext.Provider>
 }
