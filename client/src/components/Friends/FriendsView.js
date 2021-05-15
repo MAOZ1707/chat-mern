@@ -31,8 +31,10 @@ const FriendsView = ({ user, redirect }) => {
 			)
 			const { data } = response
 			console.log(data.user)
+			setUserFriends(data.user)
 
 			if (response.statusText === 'OK') {
+				redirect('rooms')
 			}
 		} catch (error) {}
 	}

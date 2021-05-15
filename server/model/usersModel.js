@@ -4,7 +4,7 @@ const usersSchema = new mongoose.Schema({
 	name: {
 		type: String,
 		trim: true,
-		required: [true, 'first name is required'],
+		required: [true, 'name is required'],
 		maxlength: [15, 'A name must have a less or equal to 15 characters'],
 		minlength: [3, 'A name must have a more or equal to 3 characters'],
 	},
@@ -29,7 +29,7 @@ const usersSchema = new mongoose.Schema({
 	friends: [
 		{
 			name: String,
-			userId: mongoose.Types.ObjectId,
+			email: String,
 		},
 	],
 })

@@ -25,7 +25,6 @@ const Friends = ({ redirect }) => {
 					'GET'
 				)
 				const { data } = response
-				console.log(data)
 				setFriend(data.user)
 			} catch (error) {}
 		},
