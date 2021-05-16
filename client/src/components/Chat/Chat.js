@@ -1,126 +1,35 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
+import { useAuth } from '../../context/authContext'
+import Conversation from './Conversation'
 import { useRooms } from '../../context/roomsContext'
 
 import { Avatar, IconButton } from '@material-ui/core'
-import {
-	AttachFile,
-	InsertEmoticon,
-	MoreVert,
-	SearchOutlined,
-	SendOutlined,
-} from '@material-ui/icons'
+import { InsertEmoticon, SendOutlined } from '@material-ui/icons'
 
-import { useAuth } from '../../context/authContext'
-
-import io from 'socket.io-client'
-import Conversation from './Conversation'
-import { useMessage } from '../../context/messageContext'
+import ChatLogic from './Logic/ChatLogic'
+import HeaderOptions from './HeaderOptions'
+import HeaderFiles from './HeaderFiles'
+import HeaderSearch from './HeaderSearch'
 
 import './Chat.css'
-import moment from 'moment'
-
-let socket
-
 const Chat = () => {
+	const { handleChange, handleSubmit, message, messageList } = ChatLogic()
 	const { selectedRoom } = useRooms()
 	const { username } = useAuth()
-	const { saveMessage, conversationMsgs, setLastMessage } = useMessage()
-	const [message, setMessage] = useState({ name: '', text: '', room: '' })
-	const [messageList, setMessageList] = useState(conversationMsgs || [])
-	const [chatUsers, setChatUsers] = useState([])
-	const [oldRoom, setOldRoom] = useState('')
-
-	const ENDPOINT = 'http://localhost:8000'
-
-	useEffect(() => {
-		socket = io(ENDPOINT)
-
-		return () => {
-			socket.disconnect()
-		}
-	}, [ENDPOINT])
-
-	useEffect(() => {
-		if (conversationMsgs) {
-			setMessageList(conversationMsgs)
-		}
-	}, [conversationMsgs, selectedRoom])
-
-	useEffect(() => {
-		socket.emit('userJoin', username)
-	}, [username])
-
-	useEffect(() => {
-		if (selectedRoom) {
-			socket.emit('roomEntered', {
-				leaveRoom: oldRoom,
-				newRoom: selectedRoom.title,
-			})
-			setMessageList([])
-		}
-
-		return () => {
-			if (selectedRoom) {
-				setOldRoom(selectedRoom.title)
-			}
-		}
-	}, [selectedRoom, oldRoom])
-
-	useEffect(() => {
-		socket.once('newMessage', (newMessage) => {
-			setMessageList([...messageList, { name: newMessage.name, text: newMessage.text }])
-		})
-
-		if (username) {
-			socket.on('userList', (userList) => {
-				setChatUsers(userList)
-				setMessage({ name: username, text: message.text })
-			})
-		}
-	}, [message.text, messageList, username])
-
-	const handleChange = (e) => {
-		setMessage({ ...message, text: e.target.value })
-	}
-
-	const handleSubmit = (e) => {
-		e.preventDefault()
-
-		let format = moment(new Date()).format('HH:mm a')
-		const newMessage = {
-			name: message.name,
-			text: message.text,
-			room: selectedRoom.title,
-			time: format,
-			roomId: selectedRoom._id,
-		}
-		socket.emit('newMessage', newMessage)
-		setMessage({ name: username, text: '' })
-		setLastMessage({ roomId: selectedRoom._id, text: message.text })
-		saveMessage(newMessage)
-	}
 
 	return (
 		<div className='chat'>
 			<div className='chat__header'>
 				<Avatar />
-
 				<div className='chat__headerInfo'>
 					<h3>{selectedRoom && selectedRoom.title}</h3>
-					<p>last seeing .....</p>
 				</div>
 
 				<div className='chat__headerRight'>
-					<IconButton>
-						<SearchOutlined />
-					</IconButton>
-					<IconButton>
-						<AttachFile />
-					</IconButton>
-					<IconButton>
-						<MoreVert />
-					</IconButton>
+					<HeaderSearch />
+					<HeaderFiles />
+					<HeaderOptions />
 				</div>
 			</div>
 

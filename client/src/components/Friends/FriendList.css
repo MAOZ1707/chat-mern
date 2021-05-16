@@ -17,16 +17,17 @@
 .friend-list_view {
 	display: flex;
 	width: 100%;
-	padding: 10px;
+	padding: 10px 0;
 	align-items: center;
-	justify-content: flex-start;
 	border-bottom: 1px solid #01d293;
-	flex-wrap: wrap;
 	margin-bottom: 20px;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-content: center;
 }
 
 .friend-list_view__info {
-	flex: 0.6;
+	flex: 1;
 	text-transform: capitalize;
 	text-align: center;
 	display: flex;
@@ -48,6 +49,14 @@
 }
 .group_icon:hover {
 	color: #01d293;
+}
+.delete_icon {
+	margin-left: 15px;
+	color: #636363;
+	cursor: pointer;
+}
+.delete_icon:hover {
+	color: #d20101;
 }
 
 .avatar {

@@ -57,7 +57,7 @@ exports.addFriend = (friend, admin) => {
 		Users.findByIdAndUpdate(
 			admin.userId,
 			{
-				$push: { friends: { name: existingUser.name, email: existingUser.email } },
+				$addToSet: { friends: { name: existingUser.name, email: existingUser.email } },
 			},
 			(err, data) => {
 				if (err) {
@@ -66,7 +66,7 @@ exports.addFriend = (friend, admin) => {
 					Users.findByIdAndUpdate(
 						existingUser._id,
 						{
-							$push: { friends: { name: data.name, email: data.email } },
+							$addToSet: { friends: { name: data.name, email: data.email } },
 						},
 						(err, data) => {
 							if (err) reject(err)

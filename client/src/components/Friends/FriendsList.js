@@ -5,6 +5,7 @@ import { useAuth } from '../../context/authContext'
 import { useRooms } from '../../context/roomsContext'
 import { useHttp } from '../../hooks/useHttp'
 
+import HighlightOffOutlinedIcon from '@material-ui/icons/HighlightOffOutlined'
 import { Avatar } from '@material-ui/core'
 import GroupAddIcon from '@material-ui/icons/GroupAdd'
 import Menu from '@material-ui/core/Menu'
@@ -18,9 +19,6 @@ const FriendsList = () => {
 	const { userId } = useAuth()
 	const { rooms } = useRooms()
 	const { sendRequest } = useHttp()
-
-	console.log(userId)
-	console.log(userFriends)
 
 	useEffect(() => {
 		loadUserFriends(userId)
@@ -67,6 +65,7 @@ const FriendsList = () => {
 							<h2 className='friend-list_name'>{friend.name}</h2>
 							<span aria-controls='simple-menu' aria-haspopup='true' onClick={handleClick}>
 								<GroupAddIcon className='group_icon' />
+								<HighlightOffOutlinedIcon className='delete_icon' />
 							</span>
 						</div>
 						<Menu

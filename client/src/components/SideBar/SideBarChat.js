@@ -3,7 +3,6 @@ import { Avatar } from '@material-ui/core'
 
 import { useRooms } from '../../context/roomsContext'
 import { useMessage } from '../../context/messageContext'
-import { useHttp } from '../../hooks/useHttp'
 
 import './SideBarChat.css'
 import axios from 'axios'
