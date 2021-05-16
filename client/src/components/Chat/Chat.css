@@ -85,3 +85,8 @@
 	border-radius: 50%;
 	margin-left: 10px;
 }
+.messages {
+	padding: 5% 0;
+	overflow: auto;
+	flex: auto;
+}
