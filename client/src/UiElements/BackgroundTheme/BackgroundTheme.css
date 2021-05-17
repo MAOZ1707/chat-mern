@@ -1,0 +1,32 @@
+.background__grid {
+	display: grid;
+	width: 100%;
+	height: 100%;
+	grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+	justify-content: center;
+	gap: 20px;
+}
+.img__container {
+	width: 100%;
+	height: 100%;
+	cursor: pointer;
+	position: relative;
+}
+
+.img__background {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	z-index: -1;
+}
+
+.img_btn {
+	z-index: 1;
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: rgba(0, 0, 0, 0.349);
+	width: 100%;
+	height: 100%;
+}

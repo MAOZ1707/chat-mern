@@ -1,6 +1,7 @@
 import { IconButton, Menu, MenuItem } from '@material-ui/core'
 import { MoreVert } from '@material-ui/icons'
 import React, { useState } from 'react'
+import BackgroundTheme from '../../UiElements/BackgroundTheme/BackgroundTheme'
 import Modal from '../../UiElements/Modal/Modal'
 
 const HeaderOptions = () => {
@@ -22,7 +23,7 @@ const HeaderOptions = () => {
 	return (
 		<>
 			<Modal open={openModal} onClose={() => setOpenModal(false)}>
-				hello friend
+				<BackgroundTheme />
 			</Modal>
 
 			<IconButton aria-controls='simple-menu' aria-haspopup='true' onClick={handleClick}>
