@@ -13,6 +13,7 @@ import HeaderFiles from './HeaderFiles'
 import HeaderSearch from './HeaderSearch'
 
 import './Chat.css'
+
 const Chat = () => {
 	const { handleChange, handleSubmit, message, messageList } = ChatLogic()
 	const { selectedRoom } = useRooms()

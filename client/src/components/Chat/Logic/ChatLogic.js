@@ -87,7 +87,7 @@ const ChatLogic = () => {
 		saveMessage(newMessage)
 	}
 
-	return { message, messageList, oldRoom, handleChange, handleSubmit }
+	return { message, messageList, oldRoom, handleChange, handleSubmit, chatUsers }
 }
 
 export default ChatLogic

@@ -1,11 +1,16 @@
 import React from 'react'
 import moment from 'moment'
 
+import StarBorderOutlinedIcon from '@material-ui/icons/StarBorderOutlined'
+
 import './Chat.css'
 
 const Message = ({ content, send }) => {
 	return (
 		<p className={`chat__message ${content.name !== send ? 'chat__receiver' : null} `}>
+			<span className='chat__favorite'>
+				<StarBorderOutlinedIcon />
+			</span>
 			<span className='chat__name'>{content.name}</span>
 			{content && content.text}
 			<span className='chat__timestamp'>

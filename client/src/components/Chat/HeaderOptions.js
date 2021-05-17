@@ -1,9 +1,11 @@
 import { IconButton, Menu, MenuItem } from '@material-ui/core'
 import { MoreVert } from '@material-ui/icons'
-import React from 'react'
+import React, { useState } from 'react'
+import Modal from '../../UiElements/Modal/Modal'
 
 const HeaderOptions = () => {
 	const [anchorEl, setAnchorEl] = React.useState(null)
+	const [openModal, setOpenModal] = useState(false)
 
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget)
@@ -12,9 +14,17 @@ const HeaderOptions = () => {
 	const handleClose = () => {
 		setAnchorEl(null)
 	}
+	const handleModalClick = () => {
+		setAnchorEl(null)
+		setOpenModal(true)
+	}
 
 	return (
 		<>
+			<Modal open={openModal} onClose={() => setOpenModal(false)}>
+				hello friend
+			</Modal>
+
 			<IconButton aria-controls='simple-menu' aria-haspopup='true' onClick={handleClick}>
 				<MoreVert />
 			</IconButton>
@@ -25,7 +35,7 @@ const HeaderOptions = () => {
 				keepMounted
 				open={Boolean(anchorEl)}
 				onClose={handleClose}>
-				<MenuItem onClick={handleClose}>Background</MenuItem>
+				<MenuItem onClick={handleModalClick}>Background</MenuItem>
 				<MenuItem onClick={handleClose}>Saved message</MenuItem>
 				<MenuItem onClick={handleClose}>Logout</MenuItem>
 			</Menu>
