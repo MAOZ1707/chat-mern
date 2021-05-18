@@ -1,5 +1,7 @@
 import React from 'react'
-import { useLocalStorage } from '../../hooks/useLocalStorage'
+
+import { useTheme } from '../../context/themeContext'
+
 import b1 from '../../utils/Images/b1.png'
 import b2 from '../../utils/Images/b2.png'
 import b3 from '../../utils/Images/b3.jpg'
@@ -12,12 +14,12 @@ import b8 from '../../utils/Images/b8.jpg'
 import './BackgroundTheme.css'
 
 const BackgroundTheme = () => {
-	const { setValue } = useLocalStorage('Theme', '../../utils/Images/b1.png')
+	const { setSelectTheme } = useTheme()
 
 	const images = [b1, b2, b3, b4, b5, b6, b7, b8]
 
 	const handleClick = (img) => {
-		setValue(img)
+		setSelectTheme(img)
 	}
 
 	return (

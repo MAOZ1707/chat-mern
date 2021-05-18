@@ -2,16 +2,16 @@ import React from 'react'
 import Message from './Message'
 import ScrollToBottom from 'react-scroll-to-bottom'
 
-import { useLocalStorage } from '../../hooks/useLocalStorage'
+import { useTheme } from '../../context/themeContext'
 
 import './Chat.css'
 
 const Conversation = ({ messageList, send }) => {
-	const { value } = useLocalStorage('Theme')
+	const { selectTheme } = useTheme()
 
 	return (
 		<ScrollToBottom className='messages'>
-			<div className='chat__body' style={{ backgroundImage: `url(${value})` }}>
+			<div className='chat__body' style={{ backgroundImage: `url(${selectTheme})` }}>
 				{messageList &&
 					messageList.map((msg, i) => (
 						<React.Fragment key={i}>
