@@ -17,7 +17,6 @@ const BackgroundTheme = () => {
 	const images = [b1, b2, b3, b4, b5, b6, b7, b8]
 
 	const handleClick = (img) => {
-		console.log(img)
 		setValue(img)
 	}
 

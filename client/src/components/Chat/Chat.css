@@ -27,8 +27,9 @@
 	flex: 1;
 	padding: 30px;
 	overflow-y: scroll;
-	/* background-image: url('../../utils/Images/b1.png'); */
-	/* background-color: rgb(187, 187, 187); */
+	background-position: center;
+	background-repeat: repeat;
+	background-size: contain;
 }
 
 .chat__message {

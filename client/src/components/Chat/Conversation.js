@@ -2,8 +2,9 @@ import React from 'react'
 import Message from './Message'
 import ScrollToBottom from 'react-scroll-to-bottom'
 
-import './Chat.css'
 import { useLocalStorage } from '../../hooks/useLocalStorage'
+
+import './Chat.css'
 
 const Conversation = ({ messageList, send }) => {
 	const { value } = useLocalStorage('Theme')
