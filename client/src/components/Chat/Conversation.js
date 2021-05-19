@@ -8,10 +8,11 @@ import './Chat.css'
 
 const Conversation = ({ messageList, send }) => {
 	const { selectTheme } = useTheme()
-
 	return (
 		<ScrollToBottom className='messages'>
-			<div className='chat__body' style={{ backgroundImage: `url(${selectTheme})` }}>
+			<div
+				className='chat__body'
+				style={{ backgroundImage: `url(${selectTheme})` }}>
 				{messageList &&
 					messageList.map((msg, i) => (
 						<React.Fragment key={i}>

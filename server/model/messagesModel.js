@@ -13,6 +13,9 @@ const messagesModel = new mongoose.Schema({
 	conversationId: {
 		type: mongoose.Types.ObjectId,
 	},
+	favorite: {
+		type: Boolean,
+	},
 })
 
 const Messages = mongoose.model('Messages', messagesModel)

@@ -19,6 +19,8 @@ const Chat = () => {
 	const { selectedRoom } = useRooms()
 	const { username } = useAuth()
 
+	console.log('Re-renders')
+
 	return (
 		<div className='chat'>
 			<div className='chat__header'>
@@ -36,7 +38,11 @@ const Chat = () => {
 
 			{selectedRoom && (
 				<>
-					<Conversation room={selectedRoom} messageList={messageList} send={username} />
+					<Conversation
+						room={selectedRoom}
+						messageList={messageList}
+						send={username}
+					/>
 
 					<div className='chat__footer'>
 						<InsertEmoticon />

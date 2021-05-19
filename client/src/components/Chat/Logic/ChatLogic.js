@@ -23,6 +23,7 @@ const ChatLogic = () => {
 
 		return () => {
 			socket.disconnect()
+			socket.off()
 		}
 	}, [ENDPOINT])
 
@@ -34,7 +35,7 @@ const ChatLogic = () => {
 
 	useEffect(() => {
 		socket.emit('userJoin', username)
-	}, [username])
+	}, [])
 
 	useEffect(() => {
 		if (selectedRoom) {
@@ -54,7 +55,10 @@ const ChatLogic = () => {
 
 	useEffect(() => {
 		socket.once('newMessage', (newMessage) => {
-			setMessageList([...messageList, { name: newMessage.name, text: newMessage.text }])
+			setMessageList([
+				...messageList,
+				{ name: newMessage.name, text: newMessage.text },
+			])
 		})
 
 		if (username) {
@@ -87,7 +91,14 @@ const ChatLogic = () => {
 		saveMessage(newMessage)
 	}
 
-	return { message, messageList, oldRoom, handleChange, handleSubmit, chatUsers }
+	return {
+		message,
+		messageList,
+		oldRoom,
+		handleChange,
+		handleSubmit,
+		chatUsers,
+	}
 }
 
 export default ChatLogic

@@ -1,15 +1,25 @@
-import React from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import moment from 'moment'
 
+import { useHttp } from '../../hooks/useHttp'
+
 import StarBorderOutlinedIcon from '@material-ui/icons/StarBorderOutlined'
+import StarIcon from '@material-ui/icons/Star'
 
 import './Chat.css'
 
 const Message = ({ content, send }) => {
+	const { error, isLoading, sendRequest } = useHttp()
+
+	// TODO ---   FIX RE-RENDERS !!
+
 	return (
-		<p className={`chat__message ${content.name !== send ? 'chat__receiver' : null} `}>
+		<p
+			className={`chat__message ${
+				content.name !== send ? 'chat__receiver' : null
+			} `}>
 			<span className='chat__favorite'>
-				<StarBorderOutlinedIcon />
+				{/* {!favMessage ? <StarBorderOutlinedIcon /> : <StarIcon />} */}
 			</span>
 			<span className='chat__name'>{content.name}</span>
 			{content && content.text}

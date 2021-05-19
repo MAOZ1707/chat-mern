@@ -22,13 +22,40 @@ router.post('/save', async (req, res, next) => {
 		return next(new AppError(error, 404))
 	}
 })
+
 router.get('/room/:id', async (req, res, next) => {
 	let roomId = req.params.id
 	try {
 		const roomMessages = await messagesBL.getMessageByRoomId(roomId)
-		console.log(roomMessages)
 
 		res.json({ message: roomMessages })
+	} catch (error) {
+		return next(new AppError(error, 404))
+	}
+})
+
+// TODO -> DONT WORK
+router.patch('/:id/favorite', async (req, res, next) => {
+	let messageId = req.params.id
+	let { favorite } = req.body
+
+	console.log(messageId)
+	console.log(favorite)
+	try {
+		const saveMessage = await messagesBL.saveAsFavorite(favorite, messageId)
+
+		res.json({ message: saveMessage })
+	} catch (error) {
+		return next(new AppError(error, 404))
+	}
+})
+
+router.get('/user/:id', async (req, res, next) => {
+	let userId = req.params.id
+	try {
+		const favoriteMsg = await messagesBL.showFavoriteMessage(userId)
+		console.log(favoriteMsg)
+		res.json({ message: favoriteMsg })
 	} catch (error) {
 		return next(new AppError(error, 404))
 	}

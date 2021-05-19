@@ -1,10 +1,5 @@
 import React from 'react'
-import {
-	BrowserRouter as Router,
-	Redirect,
-	Route,
-	Switch,
-} from 'react-router-dom'
+import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom'
 import Login from './Login'
 import Signup from './SignUp'
 
@@ -14,10 +9,10 @@ const AuthContainer = () => {
 			<Route exact path='/signup'>
 				<Signup />
 			</Route>
-			<Route exact path='/login'>
+			<Route exact path='/'>
 				<Login />
 			</Route>
-			<Redirect to='/login' />
+			<Redirect to='/' />
 		</Switch>
 	)
 

@@ -26,6 +26,7 @@
 .chat__body {
 	flex: 1;
 	padding: 30px;
+	height: inherit;
 	overflow-y: scroll;
 	background-position: center;
 	background-repeat: repeat;
@@ -95,5 +96,6 @@
 }
 .chat__favorite {
 	color: #4d4d4d;
+	cursor: pointer;
 	margin-right: 15px;
 }

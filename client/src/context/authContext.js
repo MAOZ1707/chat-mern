@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 
 const AuthContext = React.createContext()
 
@@ -6,7 +6,7 @@ export function useAuth() {
 	return useContext(AuthContext)
 }
 
-export function AuthProvider({children}) {
+export function AuthProvider({ children }) {
 	const [userId, setUserId] = useState(null)
 	const [token, setToken] = useState(null)
 	const [username, setUsername] = useState(null)
@@ -18,7 +18,7 @@ export function AuthProvider({children}) {
 
 		localStorage.setItem(
 			'chat-user',
-			JSON.stringify({username: username, userId: uID, token: token}),
+			JSON.stringify({ username: username, userId: uID, token: token })
 		)
 	}, [])
 
