@@ -26,8 +26,6 @@
 .chat__body {
 	flex: 1;
 	padding: 30px;
-	height: inherit;
-	overflow-y: scroll;
 	background-position: center;
 	background-repeat: repeat;
 	background-size: contain;

@@ -30,7 +30,7 @@ const Chat = ({ socket }) => {
 
 	useEffect(() => {
 		if (conversationMsgs) setMessages(conversationMsgs)
-	}, [selectedRoom])
+	}, [conversationMsgs, selectedRoom])
 
 	useEffect(() => {
 		socket.on('sendMessage', (newMessage) => {
