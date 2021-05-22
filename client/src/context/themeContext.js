@@ -9,7 +9,7 @@ export function useTheme() {
 }
 
 export function ThemeContextProvider({ children }) {
-	const { storageValue, setValue } = useLocalStorage('Theme', '../../utils/Images/b1.png')
+	const { storageValue, setValue } = useLocalStorage('Theme', 'theme')
 	const [selectTheme, setSelectTheme] = useState(() => {
 		const jsonValue = localStorage.getItem('Theme')
 		if (jsonValue != null) return JSON.parse(jsonValue)

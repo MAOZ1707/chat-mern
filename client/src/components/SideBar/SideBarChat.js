@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Avatar } from '@material-ui/core'
 
 import { useRooms } from '../../context/roomsContext'
@@ -6,15 +6,25 @@ import { useMessage } from '../../context/messageContext'
 
 import './SideBarChat.css'
 import axios from 'axios'
+import { useSocket } from '../../context/socketContext'
 
 const SideBarChat = ({ room }) => {
-	const { chooseRoom, selectedRoom } = useRooms()
+	const { selectedRoom, setSelectedRoom } = useRooms()
 	const { getRoomMessages, lastMessage } = useMessage()
 	const [roomLastMsg, setRoomLastMsg] = useState()
+	const [prevRoom, setPrevRoom] = useState('')
+	const socket = useSocket()
 
-	const roomInfo = () => {
-		chooseRoom(room._id)
-	}
+	const roomInfo = useCallback(() => {
+		if (socket) {
+			setSelectedRoom(room)
+			socket.emit('roomEntered', { oldRoom: prevRoom, newRoom: room })
+		}
+	}, [prevRoom, room, setSelectedRoom, socket])
+
+	useEffect(() => {
+		setPrevRoom(selectedRoom)
+	}, [selectedRoom])
 
 	useEffect(() => {
 		const getLastRoomMessage = async (roomId) => {

@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const SideBar = ({ username }) => {
+const SideBar = ({ socket, username }) => {
 	const [options, setOptions] = useState('')
 	const [anchorEl, setAnchorEl] = React.useState(null)
 
@@ -71,7 +71,10 @@ const SideBar = ({ username }) => {
 					<IconButton onClick={() => setOptions('rooms')}>
 						<ChatOutlinedIcon fontSize='small' />
 					</IconButton>
-					<IconButton aria-controls='simple-menu' aria-haspopup='true' onClick={handleClick}>
+					<IconButton
+						aria-controls='simple-menu'
+						aria-haspopup='true'
+						onClick={handleClick}>
 						<AddOutlined />
 					</IconButton>
 

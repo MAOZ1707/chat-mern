@@ -1,25 +1,71 @@
-import React from 'react'
-
+import React, { useEffect, useState, useCallback } from 'react'
 import { useAuth } from '../../context/authContext'
-import Conversation from './Conversation'
 import { useRooms } from '../../context/roomsContext'
+import { useMessage } from '../../context/messageContext'
+import Conversation from './Conversation'
 
 import { Avatar, IconButton } from '@material-ui/core'
 import { InsertEmoticon, SendOutlined } from '@material-ui/icons'
 
-import ChatLogic from './Logic/ChatLogic'
 import HeaderOptions from './HeaderOptions'
 import HeaderFiles from './HeaderFiles'
 import HeaderSearch from './HeaderSearch'
+import moment from 'moment'
 
 import './Chat.css'
 
-const Chat = () => {
-	const { handleChange, handleSubmit, message, messageList } = ChatLogic()
+const Chat = ({ socket }) => {
 	const { selectedRoom } = useRooms()
 	const { username } = useAuth()
+	const { saveMessage, conversationMsgs, setLastMessage } = useMessage()
 
-	console.log('Re-renders')
+	const [message, setMessage] = useState({ name: username, text: '', room: '' })
+	const [messages, setMessages] = useState(conversationMsgs || [])
+	const [chatUsers, setChatUsers] = useState([])
+	console.log(chatUsers)
+
+	useEffect(() => {
+		socket.emit('userJoin', username)
+	}, [])
+
+	useEffect(() => {
+		if (conversationMsgs) setMessages(conversationMsgs)
+	}, [selectedRoom])
+
+	useEffect(() => {
+		socket.on('sendMessage', (newMessage) => {
+			setMessages((prev) => [...prev, newMessage])
+		})
+	}, [])
+
+	useEffect(() => {
+		socket.on('userList', (userList) => {
+			setChatUsers(userList)
+			setMessage({ name: username, text: message.text, room: '' })
+		})
+	}, [])
+
+	const sendMessage = (e) => {
+		e.preventDefault()
+		let format = moment(new Date()).format('HH:mm a')
+
+		const newMessage = {
+			name: message.name,
+			text: message.text,
+			room: selectedRoom.title,
+			time: format,
+			roomId: selectedRoom._id,
+		}
+		socket.emit('sendMessage', newMessage)
+		setMessage({ name: message.name, text: '', room: '' })
+
+		setLastMessage({ roomId: selectedRoom._id, text: message.text })
+		saveMessage(newMessage)
+	}
+
+	const handleChange = (e) => {
+		setMessage({ ...message, text: e.target.value })
+	}
 
 	return (
 		<div className='chat'>
@@ -40,20 +86,20 @@ const Chat = () => {
 				<>
 					<Conversation
 						room={selectedRoom}
-						messageList={messageList}
+						messageList={messages}
 						send={username}
 					/>
 
 					<div className='chat__footer'>
 						<InsertEmoticon />
-						<form onSubmit={handleSubmit}>
+						<form onSubmit={sendMessage}>
 							<input
 								type='text'
 								placeholder='Type a message'
 								onChange={handleChange}
 								value={message.text}
 							/>
-							<button type='submit' onSubmit={handleSubmit}>
+							<button type='submit' onSubmit={sendMessage}>
 								<IconButton>
 									<SendOutlined />
 								</IconButton>

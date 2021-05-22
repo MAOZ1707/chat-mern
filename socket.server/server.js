@@ -12,45 +12,44 @@ const io = require('socket.io')(httpServer, {
 	},
 })
 
-app.use(cors({origin: true, credentials: true}))
+app.use(cors({ origin: true, credentials: true }))
 app.use(express.json())
 
 let users = {}
-io.on('connection', (socket) => {
-	let id = socket.id
-	socket.onAny((eventName, ...args) => {
-		console.table([id, eventName, ...args])
-	})
+io.on('connect', (socket) => {
+	const id = socket.handshake.query.id
+
+	console.log(`Hello from the server: socketId: ${socket.id}`)
 
 	socket.on('userJoin', (username) => {
 		users[socket.id] = username
-		socket.join(username)
+		console.log('Users after connection', users)
 		io.emit('userList', [...new Set(Object.values(users))])
 	})
 
-	socket.on('newMessage', (newMessage) => {
-		io.to(newMessage.room).emit('newMessage', {
+	socket.on('sendMessage', (newMessage) => {
+		console.log(newMessage)
+		io.to(newMessage.room).emit('sendMessage', {
 			name: newMessage.name,
 			text: newMessage.text,
 		})
 	})
 
-	socket.on('roomEntered', ({leaveRoom, newRoom}) => {
-		io.to(leaveRoom).emit('newMessage', {
-			name: 'NEWS',
-			text: `${users[socket.id]} has left`,
+	socket.on('roomEntered', ({ oldRoom, newRoom }) => {
+		if (oldRoom) {
+			socket.leave(oldRoom.title)
+			console.log('OLD-ROOM--', oldRoom.title)
+		}
+		io.to(newRoom.title).emit('sendMessage', {
+			name: users[socket.id],
+			text: `${users[socket.id]} just joined the ${newRoom.title} room`,
 		})
-		io.to(newRoom).emit('newMessage', {
-			name: 'NEWS',
-			text: `${users[socket.id]} has join `,
-		})
-		socket.join(newRoom)
+		console.log('NEW-ROOM', newRoom.title)
+		socket.join(newRoom.title)
 	})
 
-	//  user left the chat
 	socket.on('disconnect', () => {
 		delete users[socket.id]
-
 		io.emit('userList', [...new Set(Object.values(users))])
 	})
 })
