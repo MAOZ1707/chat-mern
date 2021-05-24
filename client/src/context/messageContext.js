@@ -61,5 +61,7 @@ export function MessageProvider({ children }) {
 		lastMessage,
 	}
 
-	return <MessageContext.Provider value={value}>{children}</MessageContext.Provider>
+	return (
+		<MessageContext.Provider value={value}>{children}</MessageContext.Provider>
+	)
 }

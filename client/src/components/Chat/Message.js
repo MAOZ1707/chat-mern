@@ -10,16 +10,29 @@ import './Chat.css'
 
 const Message = ({ content, send }) => {
 	const { error, isLoading, sendRequest } = useHttp()
+	const [starMessage, setStarMessage] = useState(content.favorite)
 
-	// TODO ---   FIX RE-RENDERS !!
+	const handleClick = async () => {
+		const response = await sendRequest(
+			`/messages/${content._id}/favorite`,
+			'PATCH',
+			{ favorite: !starMessage }
+		)
+		const { message } = response.data
+		if (response.status === 200) {
+			setStarMessage(message.favorite)
+		}
+	}
+
+	console.log(starMessage)
 
 	return (
 		<p
 			className={`chat__message ${
 				content.name !== send ? 'chat__receiver' : null
 			} `}>
-			<span className='chat__favorite'>
-				{/* {!favMessage ? <StarBorderOutlinedIcon /> : <StarIcon />} */}
+			<span className='chat__favorite' onClick={handleClick}>
+				{starMessage ? <StarIcon /> : <StarBorderOutlinedIcon />}
 			</span>
 			<span className='chat__name'>{content.name}</span>
 			{content && content.text}

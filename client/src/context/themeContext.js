@@ -9,15 +9,15 @@ export function useTheme() {
 }
 
 export function ThemeContextProvider({ children }) {
-	const { storageValue, setValue } = useLocalStorage('Theme', 'theme')
 	const [selectTheme, setSelectTheme] = useState(() => {
-		const jsonValue = localStorage.getItem('Theme')
+		const jsonValue = localStorage.getItem('user-Theme')
 		if (jsonValue != null) return JSON.parse(jsonValue)
 	})
+	// const { storageValue, setValue } = useLocalStorage('user-Theme', selectTheme)
 
-	useEffect(() => {
-		setValue(selectTheme)
-	}, [selectTheme, storageValue])
+	// useEffect(() => {
+	// 	setValue(selectTheme)
+	// }, [selectTheme, storageValue])
 
 	const value = {
 		selectTheme,

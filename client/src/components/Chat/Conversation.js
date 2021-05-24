@@ -13,7 +13,7 @@ const Conversation = ({ messageList, send }) => {
 		<ScrollToBottom className='messages'>
 			<div
 				className='chat__body'
-				style={{ backgroundImage: `url(${selectTheme})`, height: 'auto' }}>
+				style={{ backgroundImage: `url(${selectTheme})` }}>
 				{messageList &&
 					messageList.map((msg, i) => (
 						<React.Fragment key={i}>

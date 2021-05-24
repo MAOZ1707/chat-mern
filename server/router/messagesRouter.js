@@ -34,13 +34,10 @@ router.get('/room/:id', async (req, res, next) => {
 	}
 })
 
-// TODO -> DONT WORK
 router.patch('/:id/favorite', async (req, res, next) => {
 	let messageId = req.params.id
 	let { favorite } = req.body
 
-	console.log(messageId)
-	console.log(favorite)
 	try {
 		const saveMessage = await messagesBL.saveAsFavorite(favorite, messageId)
 
@@ -50,11 +47,11 @@ router.patch('/:id/favorite', async (req, res, next) => {
 	}
 })
 
-router.get('/user/:id', async (req, res, next) => {
+router.get('/user/:id/favorite', async (req, res, next) => {
 	let userId = req.params.id
 	try {
 		const favoriteMsg = await messagesBL.showFavoriteMessage(userId)
-		console.log(favoriteMsg)
+		console.log('Result', favoriteMsg)
 		res.json({ message: favoriteMsg })
 	} catch (error) {
 		return next(new AppError(error, 404))

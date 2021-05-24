@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAuth } from '../../context/authContext'
 import { useRooms } from '../../context/roomsContext'
 import { useMessage } from '../../context/messageContext'
@@ -22,7 +22,6 @@ const Chat = ({ socket }) => {
 	const [message, setMessage] = useState({ name: username, text: '', room: '' })
 	const [messages, setMessages] = useState(conversationMsgs || [])
 	const [chatUsers, setChatUsers] = useState([])
-	console.log(chatUsers)
 
 	useEffect(() => {
 		socket.emit('userJoin', username)
@@ -41,14 +40,13 @@ const Chat = ({ socket }) => {
 	useEffect(() => {
 		socket.on('userList', (userList) => {
 			setChatUsers(userList)
-			setMessage({ name: username, text: message.text, room: '' })
 		})
-	}, [])
+	}, [chatUsers])
 
 	const sendMessage = (e) => {
 		e.preventDefault()
-		let format = moment(new Date()).format('HH:mm a')
-
+		let format = moment(new Date()).calendar()
+		console.log(format)
 		const newMessage = {
 			name: message.name,
 			text: message.text,
@@ -73,6 +71,7 @@ const Chat = ({ socket }) => {
 				<Avatar />
 				<div className='chat__headerInfo'>
 					<h3>{selectedRoom && selectedRoom.title}</h3>
+					{chatUsers}
 				</div>
 
 				<div className='chat__headerRight'>

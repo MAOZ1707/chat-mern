@@ -59,25 +59,24 @@ exports.showFavoriteMessage = (userId) => {
 			if (err) {
 				reject('Could not find user')
 			} else {
-				Rooms.find({ admin: user._id }, (err, rooms) => {
+				Rooms.find({ users: { $in: user._id } }, async (err, rooms) => {
 					if (err) reject('Could not find rooms')
-					rooms.forEach((room) => {
-						Messages.find({ conversationId: room._id }, (err, messages) => {
-							if (err) reject('No messages in this room')
-							let favoriteMessages = messages.filter(
-								(message) => message.favorite === true
-							)
 
-							let dataShape = favoriteMessages.map((fav) => {
+					let allMessages = []
+					for (let room of rooms) {
+						let roomMessage = await Messages.find({ conversationId: room._id })
+						if (roomMessage.length > 0) {
+							let shapeData = roomMessage.map((msg) => {
 								return {
-									text: fav.text,
-									room: room.title,
+									text: msg.text,
+									name: room.title,
 								}
 							})
-							// console.log(dataShape)s
-							resolve(dataShape)
-						})
-					})
+							allMessages.push(shapeData)
+						}
+					}
+					const resultData = allMessages.flat(Infinity)
+					resolve(resultData)
 				})
 			}
 		})
@@ -85,12 +84,19 @@ exports.showFavoriteMessage = (userId) => {
 }
 
 exports.saveAsFavorite = (favorite, messageId) => {
-	return new Promise(async (resolve, reject) => {
-		let findMsg = await Messages.findByIdAndUpdate(messageId, {
-			favorite: favorite,
-		})
-		if (!findMsg) reject('Something went wrong, pleas try again later')
-
-		resolve(findMsg)
+	return new Promise((resolve, reject) => {
+		Messages.findByIdAndUpdate(
+			messageId,
+			{
+				favorite: favorite,
+			},
+			{
+				new: true,
+			},
+			(err, data) => {
+				resolve(data)
+				if (err) reject('Something went wrong, pleas try again later')
+			}
+		)
 	})
 }
