@@ -26,7 +26,10 @@ const BackgroundTheme = () => {
 		<div className='background__grid'>
 			{images.map((img, i) => {
 				return (
-					<div key={i + 1} onClick={() => handleClick(img)} className={`img__container b_${i + 1}`}>
+					<div
+						key={i + 1}
+						onClick={() => handleClick(img)}
+						className={`img__container b_${i + 1}`}>
 						<img
 							id={i}
 							src={img}

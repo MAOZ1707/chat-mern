@@ -45,7 +45,7 @@ const Chat = ({ socket }) => {
 
 	const sendMessage = (e) => {
 		e.preventDefault()
-		let format = moment(new Date()).calendar()
+		let format = moment().format('HH:mm a')
 		console.log(format)
 		const newMessage = {
 			name: message.name,

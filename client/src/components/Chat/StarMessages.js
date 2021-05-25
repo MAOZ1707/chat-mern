@@ -28,8 +28,8 @@ const StarMessages = () => {
 		<div className='star-msg__container'>
 			{messages &&
 				messages.map((message) => (
-					<div className='star-msg__content'>
-						<h4 className='star-msg__room'>Room: {message.name}</h4>
+					<div className='star-msg__content' key={message.text}>
+						<h4 className='star-msg__room'>Room: {message.room}</h4>
 						<h6 className='star-msg__text'>{message.text}</h6>
 					</div>
 				))}

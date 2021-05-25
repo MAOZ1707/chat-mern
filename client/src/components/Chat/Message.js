@@ -24,8 +24,6 @@ const Message = ({ content, send }) => {
 		}
 	}
 
-	console.log(starMessage)
-
 	return (
 		<p
 			className={`chat__message ${

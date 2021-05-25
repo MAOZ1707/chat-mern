@@ -1,0 +1,22 @@
+.star-msg__container {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+.star-msg__content {
+	background-color: #a6f859;
+	width: max-content;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	padding: 20px;
+	border-radius: 20px;
+	gap: 10px;
+}
+.star-msg__room {
+	font-weight: 600;
+}
+.star-msg__text {
+	font-weight: 500;
+	font-size: 1rem;
+}

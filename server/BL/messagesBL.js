@@ -69,7 +69,7 @@ exports.showFavoriteMessage = (userId) => {
 							let shapeData = roomMessage.map((msg) => {
 								return {
 									text: msg.text,
-									name: room.title,
+									room: room.title,
 								}
 							})
 							allMessages.push(shapeData)

@@ -29,9 +29,8 @@
 	min-height: 100%;
 	background-position: center;
 	background-repeat: repeat;
-	background-size: contain;
+	background-size: cover;
 }
-
 .chat__message {
 	display: flex;
 	align-items: center;
