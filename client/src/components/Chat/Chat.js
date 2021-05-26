@@ -23,6 +23,10 @@ const Chat = ({ socket }) => {
 	const [messages, setMessages] = useState(conversationMsgs || [])
 	const [chatUsers, setChatUsers] = useState([])
 
+	const [searchTerm, setSearchTerm] = useState('')
+
+	console.log(searchTerm)
+
 	useEffect(() => {
 		socket.emit('userJoin', username)
 	}, [])
@@ -67,23 +71,28 @@ const Chat = ({ socket }) => {
 
 	return (
 		<div className='chat'>
-			<div className='chat__header'>
-				<Avatar />
-				<div className='chat__headerInfo'>
-					<h3>{selectedRoom && selectedRoom.title}</h3>
-					{chatUsers}
-				</div>
+			{selectedRoom && (
+				<div className='chat__header'>
+					<Avatar />
+					<div className='chat__headerInfo'>
+						<h3>{selectedRoom && selectedRoom.title}</h3>
+						{chatUsers}
+					</div>
 
-				<div className='chat__headerRight'>
-					<HeaderSearch />
-					<HeaderFiles />
-					<HeaderOptions />
+					<div className='chat__headerRight'>
+						<HeaderSearch
+							searchTerm={searchTerm}
+							setSearchTerm={setSearchTerm}
+						/>
+						<HeaderFiles />
+						<HeaderOptions />
+					</div>
 				</div>
-			</div>
-
+			)}
 			{selectedRoom && (
 				<>
 					<Conversation
+						search={searchTerm}
 						room={selectedRoom}
 						messageList={messages}
 						send={username}

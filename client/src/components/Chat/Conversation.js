@@ -6,8 +6,11 @@ import { useTheme } from '../../context/themeContext'
 
 import './Chat.css'
 
-const Conversation = ({ messageList, send }) => {
+const Conversation = ({ messageList, send, search }) => {
 	const { selectTheme } = useTheme()
+
+	let filterMessages = messageList.filter((msg) => msg.text.includes(search))
+	console.log(filterMessages)
 
 	return (
 		<ScrollToBottom className='messages'>
@@ -15,7 +18,7 @@ const Conversation = ({ messageList, send }) => {
 				className='chat__body'
 				style={{ backgroundImage: `url(${selectTheme})` }}>
 				{messageList &&
-					messageList.map((msg, i) => (
+					filterMessages.map((msg, i) => (
 						<React.Fragment key={i}>
 							<Message content={msg} send={send} />
 						</React.Fragment>

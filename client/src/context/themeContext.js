@@ -13,11 +13,6 @@ export function ThemeContextProvider({ children }) {
 		const jsonValue = localStorage.getItem('user-Theme')
 		if (jsonValue != null) return JSON.parse(jsonValue)
 	})
-	// const { storageValue, setValue } = useLocalStorage('user-Theme', selectTheme)
-
-	// useEffect(() => {
-	// 	setValue(selectTheme)
-	// }, [selectTheme, storageValue])
 
 	const value = {
 		selectTheme,

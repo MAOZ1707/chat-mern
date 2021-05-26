@@ -1,0 +1,37 @@
+.search-wrapper {
+	display: inline-flex;
+	position: relative;
+}
+.search-icon {
+	position: absolute;
+	right: 0vh;
+	z-index: 2;
+	transition: all 0.6s;
+}
+.search-input {
+	z-index: 1;
+	position: absolute;
+	right: 15px;
+	bottom: 15px;
+	background: transparent;
+	border: none;
+	border-bottom: 2px solid #6e6e6e;
+	width: 0vw;
+	outline: none;
+	transition: all 0.6s;
+	font-size: 1rem;
+	padding-left: 10px;
+	color: #727171;
+}
+.active {
+	z-index: 1;
+	position: absolute;
+	right: 15px;
+	bottom: 15px;
+	background: transparent;
+	border: none;
+	border-bottom: 2px solid #6e6e6e;
+	width: 25vw;
+	outline: none;
+	transition: all 0.6s;
+}
