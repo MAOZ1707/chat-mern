@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react'
+import moment from 'moment'
+import Picker from 'emoji-picker-react'
+
 import { useAuth } from '../../context/authContext'
 import { useRooms } from '../../context/roomsContext'
 import { useMessage } from '../../context/messageContext'
@@ -10,7 +13,6 @@ import { InsertEmoticon, SendOutlined } from '@material-ui/icons'
 import HeaderOptions from './HeaderOptions'
 import HeaderFiles from './HeaderFiles'
 import HeaderSearch from './HeaderSearch'
-import moment from 'moment'
 
 import './Chat.css'
 
@@ -24,8 +26,7 @@ const Chat = ({ socket }) => {
 	const [chatUsers, setChatUsers] = useState([])
 
 	const [searchTerm, setSearchTerm] = useState('')
-
-	console.log(searchTerm)
+	const [openEmoji, setOpenEmoji] = useState(false)
 
 	useEffect(() => {
 		socket.emit('userJoin', username)
@@ -50,7 +51,6 @@ const Chat = ({ socket }) => {
 	const sendMessage = (e) => {
 		e.preventDefault()
 		let format = moment().format('HH:mm a')
-		console.log(format)
 		const newMessage = {
 			name: message.name,
 			text: message.text,
@@ -68,7 +68,10 @@ const Chat = ({ socket }) => {
 	const handleChange = (e) => {
 		setMessage({ ...message, text: e.target.value })
 	}
-
+	const onEmojiClick = (event, emojiObject) => {
+		console.log(emojiObject)
+		setMessage({ ...message, text: message.text + emojiObject.emoji })
+	}
 	return (
 		<div className='chat'>
 			{selectedRoom && (
@@ -99,7 +102,20 @@ const Chat = ({ socket }) => {
 					/>
 
 					<div className='chat__footer'>
-						<InsertEmoticon />
+						<InsertEmoticon
+							onClick={() => setOpenEmoji((prev) => !prev)}
+							style={{ cursor: 'pointer' }}
+						/>
+						{openEmoji && (
+							<Picker
+								onEmojiClick={onEmojiClick}
+								pickerStyle={{
+									position: 'absolute',
+									bottom: '55px',
+									left: 0,
+								}}
+							/>
+						)}
 						<form onSubmit={sendMessage}>
 							<input
 								type='text'

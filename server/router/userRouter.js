@@ -28,9 +28,6 @@ router.post('/login', async (req, res, next) => {
 		const userInfo = req.body
 
 		let user = await authBL.login(userInfo)
-
-		console.log(user)
-
 		const token = signToken(user._id)
 
 		res.json({ token, user: user })
@@ -109,14 +106,24 @@ router.patch('/add-friend', async (req, res, next) => {
 	try {
 		let user = await usersBL.addFriend(friend, admin)
 
-		console.log(user)
-
 		res.json({
 			user: {
 				name: user.name,
 				email: user.email,
 			},
 		})
+	} catch (error) {
+		return next(new AppError('Could not find user', 404))
+	}
+})
+
+router.patch('/remove-friend', async (req, res, next) => {
+	const { admin, friendEmail } = req.body
+
+	try {
+		let update = await usersBL.removeUserFromFriendList(admin, friendEmail)
+		console.log(update)
+		res.json({ updateUser: update })
 	} catch (error) {
 		return next(new AppError('Could not find user', 404))
 	}

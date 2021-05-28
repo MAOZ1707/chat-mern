@@ -9,6 +9,7 @@ const StarMessages = () => {
 	const { userId } = useAuth()
 	const [messages, setMessages] = useState([])
 
+	//	TODO == FIX GET ONLY MESSAGE IF TRUE!
 	useEffect(() => {
 		const fetchData = async () => {
 			const response = await sendRequest(

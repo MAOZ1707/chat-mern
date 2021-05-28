@@ -57,7 +57,9 @@ exports.addFriend = (friend, admin) => {
 		Users.findByIdAndUpdate(
 			admin.userId,
 			{
-				$addToSet: { friends: { name: existingUser.name, email: existingUser.email } },
+				$addToSet: {
+					friends: { name: existingUser.name, email: existingUser.email },
+				},
 			},
 			(err, data) => {
 				if (err) {
@@ -91,6 +93,30 @@ exports.loadUserFriends = (userId) => {
 			} else {
 				resolve(user)
 			}
+		})
+	})
+}
+
+exports.removeUserFromFriendList = (admin, friendEmail) => {
+	return new Promise((resolve, reject) => {
+		Users.findById({ _id: admin }, (err, user) => {
+			if (err) reject(err)
+			//check if friend existing
+			Users.findOne({ email: friendEmail }, async (err, friend) => {
+				if (err) reject(err)
+				// remove friend from ths list
+				await Users.findByIdAndUpdate(
+					user._id,
+					{
+						$pull: { friends: { email: friend.email } },
+					},
+					(err, data) => {
+						if (err) reject(err)
+						console.log('TEST', data)
+						resolve(data)
+					}
+				)
+			})
 		})
 	})
 }

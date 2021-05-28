@@ -10,7 +10,6 @@ const Conversation = ({ messageList, send, search }) => {
 	const { selectTheme } = useTheme()
 
 	let filterMessages = messageList.filter((msg) => msg.text.includes(search))
-	console.log(filterMessages)
 
 	return (
 		<ScrollToBottom className='messages'>

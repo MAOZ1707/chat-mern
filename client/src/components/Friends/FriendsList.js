@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { useUsers } from '../../context/userContext'
 import { useAuth } from '../../context/authContext'
@@ -15,14 +15,15 @@ import './FriendList.css'
 
 const FriendsList = () => {
 	const [anchorEl, setAnchorEl] = React.useState(null)
-	const { userFriends, loadUserFriends } = useUsers()
+	const [load, setLoad] = useState(false)
+	const { setUserFriends, userFriends, loadUserFriends } = useUsers()
 	const { userId } = useAuth()
 	const { rooms } = useRooms()
 	const { sendRequest } = useHttp()
 
 	useEffect(() => {
 		loadUserFriends(userId)
-	}, [userId])
+	}, [loadUserFriends, userId])
 
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget)
@@ -51,6 +52,28 @@ const FriendsList = () => {
 	const handleClose = () => {
 		setAnchorEl(null)
 	}
+	const removeFriend = async (friendEmail) => {
+		try {
+			const response = await sendRequest(
+				`/users/remove-friend`,
+				'patch',
+				{
+					admin: userId,
+					friendEmail,
+				},
+				{
+					'Content-Type': 'application/json',
+					// Authorization: 'Bearer ' + token,
+				}
+			)
+			const { updateUser } = response.data
+
+			if (response.statusText === 'OK') {
+				setUserFriends(updateUser.friends)
+				setLoad((prev) => !prev)
+			}
+		} catch (error) {}
+	}
 
 	return (
 		<div className='friend-list__container'>
@@ -63,9 +86,12 @@ const FriendsList = () => {
 						</div>
 						<div className='friend-list_view__info'>
 							<h2 className='friend-list_name'>{friend.name}</h2>
-							<span aria-controls='simple-menu' aria-haspopup='true' onClick={handleClick}>
-								<GroupAddIcon className='group_icon' />
-								<HighlightOffOutlinedIcon className='delete_icon' />
+							<span aria-controls='simple-menu' aria-haspopup='true'>
+								<GroupAddIcon className='group_icon' onClick={handleClick} />
+								<HighlightOffOutlinedIcon
+									className='delete_icon'
+									onClick={() => removeFriend(friend.email)}
+								/>
 							</span>
 						</div>
 						<Menu
@@ -76,7 +102,9 @@ const FriendsList = () => {
 							onClose={handleClose}>
 							{rooms &&
 								rooms.map((room) => (
-									<MenuItem key={room._id} onClick={() => inviteToRoom(room._id, friend.email)}>
+									<MenuItem
+										key={room._id}
+										onClick={() => inviteToRoom(room._id, friend.email)}>
 										{room.title}
 									</MenuItem>
 								))}

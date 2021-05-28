@@ -1,11 +1,18 @@
 import React from 'react'
-import {useFormik} from 'formik'
+import { Link } from 'react-router-dom'
+import { useFormik } from 'formik'
 import * as Yup from 'yup'
 
+import { useHttp } from '../../hooks/useHttp'
+import { useAuth } from '../../context/authContext'
+
 import './Auth.css'
-import {Link} from 'react-router-dom'
 
 const Signup = () => {
+	const { sendRequest } = useHttp()
+
+	const { login } = useAuth()
+
 	const formik = useFormik({
 		initialValues: {
 			name: '',
@@ -21,8 +28,24 @@ const Signup = () => {
 				.min(6, 'Must be at least 6 characters')
 				.required('Required'),
 		}),
-		onSubmit: (values) => {
+		onSubmit: async (values) => {
 			console.log(values)
+			try {
+				const response = await sendRequest(
+					'http://localhost:5000/users/signup',
+					'POST',
+					{
+						name: values.name,
+						email: values.email,
+						password: values.password,
+					},
+					{
+						'Content-Type': 'application/json',
+					}
+				)
+				const data = response.data
+				login(data.user._id, data.token, data.user.name)
+			} catch (error) {}
 		},
 	})
 
@@ -34,8 +57,7 @@ const Signup = () => {
 					htmlFor='name'
 					className={`auth__label auth__label__name ${
 						!formik.errors.name && formik.touched.name && 'auth__success'
-					}`}
-				>
+					}`}>
 					Name
 					{formik.touched.name && formik.errors.name ? (
 						<span className='auth__error__msg'>{formik.errors.name}</span>
@@ -56,8 +78,7 @@ const Signup = () => {
 					htmlFor='email'
 					className={`auth__label auth__label__email ${
 						!formik.errors.email && formik.touched.email && 'auth__success'
-					}`}
-				>
+					}`}>
 					Email
 					{formik.touched.email && formik.errors.email ? (
 						<span className='auth__error__msg'>{formik.errors.email}</span>
@@ -80,8 +101,7 @@ const Signup = () => {
 						!formik.errors.password &&
 						formik.touched.password &&
 						'auth__success'
-					}`}
-				>
+					}`}>
 					Password
 					{formik.touched.password && formik.errors.password ? (
 						<span className='auth__error__msg'>{formik.errors.password}</span>

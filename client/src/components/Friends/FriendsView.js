@@ -10,7 +10,7 @@ import './Friends.css'
 const FriendsView = ({ user, redirect }) => {
 	const { sendRequest } = useHttp()
 	const { username, userId } = useAuth()
-	const { setUserFriends } = useUsers()
+	const { setUserFriends, userFriends } = useUsers()
 
 	const getUserCharacters = user.name.slice(0, 2).toUpperCase()
 
@@ -30,8 +30,7 @@ const FriendsView = ({ user, redirect }) => {
 				}
 			)
 			const { data } = response
-			console.log(data.user)
-			setUserFriends(data.user)
+			setUserFriends([...userFriends, data.user])
 
 			if (response.statusText === 'OK') {
 				redirect('rooms')
