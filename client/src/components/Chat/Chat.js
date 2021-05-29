@@ -17,7 +17,7 @@ import HeaderSearch from './HeaderSearch'
 import './Chat.css'
 
 const Chat = ({ socket }) => {
-	const { selectedRoom } = useRooms()
+	const { selectedRoom, roomUsers } = useRooms()
 	const { username } = useAuth()
 	const { saveMessage, conversationMsgs, setLastMessage } = useMessage()
 
@@ -69,9 +69,9 @@ const Chat = ({ socket }) => {
 		setMessage({ ...message, text: e.target.value })
 	}
 	const onEmojiClick = (event, emojiObject) => {
-		console.log(emojiObject)
 		setMessage({ ...message, text: message.text + emojiObject.emoji })
 	}
+
 	return (
 		<div className='chat'>
 			{selectedRoom && (
@@ -79,7 +79,14 @@ const Chat = ({ socket }) => {
 					<Avatar />
 					<div className='chat__headerInfo'>
 						<h3>{selectedRoom && selectedRoom.title}</h3>
-						{chatUsers}
+						<div className='chat__room-users'>
+							{roomUsers &&
+								roomUsers.map((user) => (
+									<p className='chat__room-user' key={user}>
+										{user}
+									</p>
+								))}
+						</div>
 					</div>
 
 					<div className='chat__headerRight'>

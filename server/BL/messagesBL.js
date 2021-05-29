@@ -66,10 +66,14 @@ exports.showFavoriteMessage = (userId) => {
 					for (let room of rooms) {
 						let roomMessage = await Messages.find({ conversationId: room._id })
 						if (roomMessage.length > 0) {
-							let shapeData = roomMessage.map((msg) => {
-								return {
-									text: msg.text,
-									room: room.title,
+							let shapeData = roomMessage.filter((msg) => {
+								if (msg.favorite === true) {
+									return {
+										text: msg.text,
+										room: room.title,
+									}
+								} else {
+									return
 								}
 							})
 							allMessages.push(shapeData)

@@ -17,7 +17,10 @@ exports.getRoomByUserId = (userId) => {
 		if (!existingUser) reject('Could not find user')
 
 		//  data shaping
-		const userRooms = await Rooms.find().where('_id').in(existingUser.rooms).exec()
+		const userRooms = await Rooms.find()
+			.where('_id')
+			.in(existingUser.rooms)
+			.exec()
 
 		resolve(userRooms)
 	})
@@ -30,7 +33,9 @@ exports.createRoom = (room) => {
 		let checkRoomName
 		try {
 			let userRooms = await Rooms.find({ admin: room.admin })
-			checkRoomName = userRooms.filter((existingRoom) => existingRoom.title === room.title)
+			checkRoomName = userRooms.filter(
+				(existingRoom) => existingRoom.title === room.title
+			)
 		} catch (error) {
 			reject('Something went wrong please try again later')
 		}
@@ -63,25 +68,27 @@ exports.deleteRoom = (roomId, admin) => {
 		let room = await Rooms.findById(roomId)
 		if (!room) reject('Could not find room')
 
-		console.log(admin)
-
 		// check admin
 		if (room.admin.toString() !== admin.toString()) {
-			reject('Sorry you dont have permission !, only admin can add / delete users')
+			reject(
+				'Sorry you dont have permission !, only admin can add / delete users'
+			)
 		}
 		// delete room from user rooms
 		room.users.map(
 			async (user) =>
-				await Users.findByIdAndUpdate(user._id, { $pull: { rooms: roomId } }, (err, data) => {
-					if (err) reject(err)
-
-					resolve(data)
-				})
+				await Users.findByIdAndUpdate(
+					user._id,
+					{ $pull: { rooms: roomId } },
+					(err) => {
+						if (err) reject(err)
+					}
+				)
 		)
-
-		// delete room from data base
+		// delete room from database
 		Rooms.findByIdAndDelete(roomId, (err, data) => {
 			if (err) reject(err)
+			resolve(data)
 		})
 	})
 }
@@ -93,14 +100,14 @@ exports.addUserToRoom = (roomId, friendEmail, admin) => {
 		let existingUser = await Users.findOne({ email: friendEmail })
 		if (!existingUser) reject('Could not find user')
 
-		console.log(existingUser)
-
 		let room = await Rooms.findById(roomId)
 		if (!room) reject('Could not find room')
 
 		// check if user is admin
 		if (room.admin.toString() !== admin.toString()) {
-			reject('Sorry you dont have permission !, only admin can add / delete users')
+			reject(
+				'Sorry you dont have permission !, only admin can add / delete users'
+			)
 		}
 
 		// add room to user rooms
@@ -137,7 +144,9 @@ exports.removeUser = (roomId, userId, admin) => {
 
 		// check if user is admin
 		if (room.admin.toString() !== admin.toString()) {
-			reject('Sorry you dont have permission !, only admin can add / delete users')
+			reject(
+				'Sorry you dont have permission !, only admin can add / delete users'
+			)
 		}
 
 		Rooms.findByIdAndUpdate(
@@ -150,5 +159,21 @@ exports.removeUser = (roomId, userId, admin) => {
 				resolve(data)
 			}
 		)
+	})
+}
+
+exports.getRoomUsers = (roomId) => {
+	return new Promise((resolve, reject) => {
+		Rooms.findById({ _id: roomId }, async (err, room) => {
+			if (err) reject(err)
+			let users = []
+			for (id of room.users) {
+				await Users.findById(id, (err, user) => {
+					if (err) reject(err)
+					users.push(user.name)
+				})
+			}
+			resolve(users)
+		})
 	})
 }

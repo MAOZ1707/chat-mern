@@ -1,19 +1,26 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Avatar } from '@material-ui/core'
+import HighlightOffRoundedIcon from '@material-ui/icons/HighlightOffRounded'
 
 import { useRooms } from '../../context/roomsContext'
 import { useMessage } from '../../context/messageContext'
 
-import './SideBarChat.css'
 import axios from 'axios'
 import { useSocket } from '../../context/socketContext'
 
+import './SideBarChat.css'
+import { useAuth } from '../../context/authContext'
+import { useHttp } from '../../hooks/useHttp'
+
 const SideBarChat = ({ room }) => {
-	const { selectedRoom, setSelectedRoom } = useRooms()
+	const socket = useSocket()
+	const { selectedRoom, setSelectedRoom, setRooms } = useRooms()
 	const { getRoomMessages, lastMessage } = useMessage()
+	const { userId } = useAuth()
 	const [roomLastMsg, setRoomLastMsg] = useState()
 	const [prevRoom, setPrevRoom] = useState('')
-	const socket = useSocket()
+
+	const { sendRequest } = useHttp()
 
 	const roomInfo = useCallback(() => {
 		if (socket) {
@@ -59,6 +66,18 @@ const SideBarChat = ({ room }) => {
 		}
 	}, [getRoomMessages, selectedRoom])
 
+	const deleteRoom = async (roomId) => {
+		const response = await sendRequest(
+			`http://localhost:5000/rooms/${roomId}/delete`,
+			'DELETE',
+			{ admin: userId }
+		)
+		const { userRooms } = response.data
+		if (response.status === 200) {
+			setRooms(userRooms)
+		}
+	}
+
 	return (
 		<div className='sidebarChat' onClick={roomInfo}>
 			<Avatar />
@@ -66,6 +85,13 @@ const SideBarChat = ({ room }) => {
 				<h2>{room.title}</h2>
 				<p>{roomLastMsg}</p>
 			</div>
+			{selectedRoom && selectedRoom.admin === userId ? (
+				<div
+					className='sidebarChat__delete'
+					onClick={() => deleteRoom(selectedRoom._id)}>
+					<HighlightOffRoundedIcon />
+				</div>
+			) : null}
 		</div>
 	)
 }

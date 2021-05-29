@@ -22,6 +22,17 @@ router.get('/user/:id', async (req, res, next) => {
 	}
 })
 
+router.get('/room/:id/users', async (req, res, next) => {
+	const roomId = req.params.id
+
+	try {
+		const users = await roomsBL.getRoomUsers(roomId)
+		res.json({ roomUsers: users })
+	} catch (error) {
+		return next(new AppError(error, 404))
+	}
+})
+
 router.post('/create', async (req, res, next) => {
 	console.log(req.body)
 	try {
@@ -64,12 +75,13 @@ router.patch('/:id/removeUser', async (req, res, next) => {
 	}
 })
 
-router.delete('/:id/deleteRoom', async (req, res, next) => {
+router.delete('/:id/delete', async (req, res, next) => {
 	const { admin } = req.body
-	try {
-		await roomsBL.deleteRoom(req.params.id, admin)
 
-		res.json({ message: 'Deleted' })
+	try {
+		const deletedRoom = await roomsBL.deleteRoom(req.params.id, admin)
+		const loadRoom = await roomsBL.getRoomByUserId(admin)
+		res.json({ userRooms: loadRoom })
 	} catch (error) {
 		console.log(error)
 		return next(new AppError(error, 404))

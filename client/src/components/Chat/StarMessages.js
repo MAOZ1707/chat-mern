@@ -23,8 +23,6 @@ const StarMessages = () => {
 		fetchData()
 	}, [userId])
 
-	console.log(messages)
-
 	return (
 		<div className='star-msg__container'>
 			{messages &&
