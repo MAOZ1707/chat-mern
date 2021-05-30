@@ -61,4 +61,17 @@
 
 .avatar {
 	flex: 0.3;
+	position: relative;
+	z-index: 1;
+}
+.friend-list_online {
+	position: absolute;
+	background: #01d293;
+	width: 15px;
+	height: 15px;
+	border-radius: 50%;
+	border: 1px solid #fff;
+	z-index: 2;
+	bottom: 32px;
+	left: -1px;
 }

@@ -15,15 +15,16 @@ import HeaderFiles from './HeaderFiles'
 import HeaderSearch from './HeaderSearch'
 
 import './Chat.css'
+import { useSocket } from '../../context/socketContext'
 
 const Chat = ({ socket }) => {
 	const { selectedRoom, roomUsers } = useRooms()
 	const { username } = useAuth()
+	const { chatUsers, setChatUsers } = useSocket()
 	const { saveMessage, conversationMsgs, setLastMessage } = useMessage()
 
 	const [message, setMessage] = useState({ name: username, text: '', room: '' })
 	const [messages, setMessages] = useState(conversationMsgs || [])
-	const [chatUsers, setChatUsers] = useState([])
 
 	const [searchTerm, setSearchTerm] = useState('')
 	const [openEmoji, setOpenEmoji] = useState(false)

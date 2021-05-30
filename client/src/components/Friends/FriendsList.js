@@ -12,14 +12,20 @@ import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 
 import './FriendList.css'
+import { useSocket } from '../../context/socketContext'
+import Modal from '../../UiElements/Modal/Modal'
+import PrivateChat from '../PrivateChat/PrivateChat'
 
 const FriendsList = () => {
 	const [anchorEl, setAnchorEl] = React.useState(null)
-	const [load, setLoad] = useState(false)
 	const { setUserFriends, userFriends, loadUserFriends } = useUsers()
 	const { userId } = useAuth()
 	const { rooms } = useRooms()
 	const { sendRequest } = useHttp()
+	const { chatUsers, socket } = useSocket()
+	const [load, setLoad] = useState(false)
+	const [openPrivateMessage, setOpenPrivateMessage] = useState(false)
+	const [selectedFriend, setSelectedFriend] = useState('')
 
 	useEffect(() => {
 		loadUserFriends(userId)
@@ -75,14 +81,37 @@ const FriendsList = () => {
 		} catch (error) {}
 	}
 
+	const sendPrivateMessage = (friend) => {
+		if (socket) {
+			socket.emit('privateMessage', friend)
+			setSelectedFriend(friend)
+			setOpenPrivateMessage(true)
+		}
+	}
+
 	return (
 		<div className='friend-list__container'>
+			<Modal
+				onClose={() => setOpenPrivateMessage(false)}
+				open={openPrivateMessage}>
+				<PrivateChat friend={selectedFriend} />
+			</Modal>
+
 			<h2 className='friend-list__title'>My Friends</h2>
 			{userFriends &&
 				userFriends.map((friend, i) => (
-					<div className='friend-list_view' key={i}>
+					<div
+						className='friend-list_view'
+						key={i}
+						onClick={() => sendPrivateMessage(friend.name)}>
 						<div className='avatar'>
 							<Avatar>PIC</Avatar>
+							{chatUsers &&
+							chatUsers.some(
+								(user) => friend.name.toLowerCase() === user.toLowerCase()
+							) ? (
+								<div className='friend-list_online'></div>
+							) : null}
 						</div>
 						<div className='friend-list_view__info'>
 							<h2 className='friend-list_name'>{friend.name}</h2>

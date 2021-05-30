@@ -23,12 +23,21 @@ io.on('connect', (socket) => {
 
 	socket.on('userJoin', (username) => {
 		users[socket.id] = username
+		socket.join(username)
 		console.log('Users after connection', users)
 		io.emit('userList', [...new Set(Object.values(users))])
 	})
 
 	socket.on('sendMessage', (newMessage) => {
 		console.log(newMessage)
+		if (newMessage.private) {
+			io.to(newMessage.to).emit('sendMessage', {
+				name: newMessage.name,
+				text: newMessage.text,
+			})
+		}
+
+		//	TODOS -- PUT HERE THE USER ID/OR CREATE A NEW SENDmESSAGE
 		io.to(newMessage.room).emit('sendMessage', {
 			name: newMessage.name,
 			text: newMessage.text,
@@ -38,14 +47,21 @@ io.on('connect', (socket) => {
 	socket.on('roomEntered', ({ oldRoom, newRoom }) => {
 		if (oldRoom) {
 			socket.leave(oldRoom.title)
-			console.log('OLD-ROOM--', oldRoom.title)
 		}
 		io.to(newRoom.title).emit('sendMessage', {
 			name: users[socket.id],
 			text: `${users[socket.id]} just joined the ${newRoom.title} room`,
 		})
-		console.log('NEW-ROOM', newRoom.title)
 		socket.join(newRoom.title)
+	})
+
+	socket.on('privateMessage', (username) => {
+		users[socket.id] = username
+		socket.join(username)
+		io.to(username).emit('sendMessage', {
+			name: users[socket.id],
+			text: `${users[socket.id]} just joined `,
+		})
 	})
 
 	socket.on('disconnect', () => {

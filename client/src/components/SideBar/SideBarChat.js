@@ -13,7 +13,7 @@ import { useAuth } from '../../context/authContext'
 import { useHttp } from '../../hooks/useHttp'
 
 const SideBarChat = ({ room }) => {
-	const socket = useSocket()
+	const { socket } = useSocket()
 	const { selectedRoom, setSelectedRoom, setRooms } = useRooms()
 	const { getRoomMessages, lastMessage } = useMessage()
 	const { userId } = useAuth()

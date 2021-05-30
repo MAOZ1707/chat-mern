@@ -12,7 +12,7 @@ const Dashboard = ({ user }) => {
 	const { loadUsers } = useUsers()
 	const { loadRooms } = useRooms()
 	const { selectTheme } = useTheme()
-	const socket = useSocket()
+	const { socket } = useSocket()
 	const { setValue } = useLocalStorage('user-Theme', '')
 	const { userId } = useAuth()
 

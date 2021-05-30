@@ -9,16 +9,22 @@ export function useSocket() {
 
 export function SocketProvider({ id, children }) {
 	const [socket, setSocket] = useState()
-	const ENDPOINT = 'http://localhost:8000'
+	const [chatUsers, setChatUsers] = useState([])
 
-	console.log(socket)
+	const ENDPOINT = 'http://localhost:8000'
 	useEffect(() => {
 		const newSocket = io(ENDPOINT)
 		setSocket(newSocket)
 		return () => newSocket.close()
 	}, [ENDPOINT])
 
+	const values = {
+		socket,
+		chatUsers,
+		setChatUsers,
+	}
+
 	return (
-		<SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
+		<SocketContext.Provider value={values}>{children}</SocketContext.Provider>
 	)
 }
