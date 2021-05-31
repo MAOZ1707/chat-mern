@@ -48,36 +48,36 @@ exports.findFriend = (email) => {
 }
 
 exports.addFriend = (friend, admin) => {
-	return new Promise(async (resolve, reject) => {
+	return new Promise((resolve, reject) => {
 		// check friend
-		let existingUser = await Users.findOne({ email: friend.email })
-		if (!existingUser) reject('Could not find user with that email')
-
-		// add friend to user list
-		Users.findByIdAndUpdate(
-			admin.userId,
-			{
-				$addToSet: {
-					friends: { name: existingUser.name, email: existingUser.email },
+		Users.findOne({ email: friend.email }, (err, existingUser) => {
+			if (err) reject('Could not find user with that email')
+			// add friend to user list
+			Users.findByIdAndUpdate(
+				admin.userId,
+				{
+					$addToSet: {
+						friends: { name: existingUser.name, email: existingUser.email },
+					},
 				},
-			},
-			(err, data) => {
-				if (err) {
-					reject(err)
-				} else {
-					Users.findByIdAndUpdate(
-						existingUser._id,
-						{
-							$addToSet: { friends: { name: data.name, email: data.email } },
-						},
-						(err, data) => {
-							if (err) reject(err)
-							resolve(data)
-						}
-					)
+				(err, data) => {
+					if (err) {
+						reject(err)
+					} else {
+						Users.findByIdAndUpdate(
+							existingUser._id,
+							{
+								$addToSet: { friends: { name: data.name, email: data.email } },
+							},
+							(err, data) => {
+								if (err) reject(err)
+								resolve(data)
+							}
+						)
+					}
 				}
-			}
-		)
+			)
+		})
 	})
 }
 
@@ -112,7 +112,6 @@ exports.removeUserFromFriendList = (admin, friendEmail) => {
 					},
 					(err, data) => {
 						if (err) reject(err)
-						console.log('TEST', data)
 						resolve(data)
 					}
 				)

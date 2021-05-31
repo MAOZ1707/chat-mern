@@ -15,6 +15,7 @@ router.get('/:id', async (req, res, next) => {
 router.get('/user/:id', async (req, res, next) => {
 	try {
 		const rooms = await roomsBL.getRoomByUserId(req.params.id)
+		console.log('USER-ROOMS', rooms)
 
 		res.json({ userRooms: rooms })
 	} catch (error) {
@@ -27,6 +28,7 @@ router.get('/room/:id/users', async (req, res, next) => {
 
 	try {
 		const users = await roomsBL.getRoomUsers(roomId)
+
 		res.json({ roomUsers: users })
 	} catch (error) {
 		return next(new AppError(error, 404))
@@ -79,7 +81,7 @@ router.delete('/:id/delete', async (req, res, next) => {
 	const { admin } = req.body
 
 	try {
-		const deletedRoom = await roomsBL.deleteRoom(req.params.id, admin)
+		await roomsBL.deleteRoom(req.params.id, admin)
 		const loadRoom = await roomsBL.getRoomByUserId(admin)
 		res.json({ userRooms: loadRoom })
 	} catch (error) {

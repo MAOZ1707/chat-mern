@@ -51,7 +51,6 @@ router.get('/user/:id/favorite', async (req, res, next) => {
 	let userId = req.params.id
 	try {
 		const favoriteMsg = await messagesBL.showFavoriteMessage(userId)
-		console.log('Result', favoriteMsg)
 		res.json({ message: favoriteMsg })
 	} catch (error) {
 		return next(new AppError(error, 404))

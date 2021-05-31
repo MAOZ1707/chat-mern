@@ -94,8 +94,6 @@ exports.deleteRoom = (roomId, admin) => {
 }
 
 exports.addUserToRoom = (roomId, friendEmail, admin) => {
-	console.log(roomId)
-
 	return new Promise(async (resolve, reject) => {
 		let existingUser = await Users.findOne({ email: friendEmail })
 		if (!existingUser) reject('Could not find user')
@@ -135,33 +133,32 @@ exports.addUserToRoom = (roomId, friendEmail, admin) => {
 }
 
 exports.removeUser = (roomId, userId, admin) => {
-	return new Promise(async (resolve, reject) => {
-		let existingUser = await Users.findById({ _id: userId })
-		if (!existingUser) reject('Could not find user')
-
-		let room = await Rooms.findById(roomId)
-		if (!room) reject('Could not find room')
-
-		// check if user is admin
-		if (room.admin.toString() !== admin.toString()) {
-			reject(
-				'Sorry you dont have permission !, only admin can add / delete users'
-			)
-		}
-
-		Rooms.findByIdAndUpdate(
-			room._id,
-			{
-				$pull: { users: userId },
-			},
-			(err, data) => {
-				if (err) reject(err)
-				resolve(data)
-			}
-		)
+	return new Promise((resolve, reject) => {
+		Users.findById({ _id: userId }, (err, user) => {
+			if (err) reject(err)
+			if (!user) reject('Could not find user')
+			Rooms.findById(roomId, (err, room) => {
+				if (err) reject('Could not find room')
+				// check if user is admin
+				if (room.admin.toString() !== admin.toString()) {
+					reject(
+						'Sorry you dont have permission !, only admin can add / delete users'
+					)
+				}
+				Rooms.findByIdAndUpdate(
+					room._id,
+					{
+						$pull: { users: userId },
+					},
+					(err, data) => {
+						if (err) reject(err)
+						resolve(data)
+					}
+				)
+			})
+		})
 	})
 }
-
 exports.getRoomUsers = (roomId) => {
 	return new Promise((resolve, reject) => {
 		Rooms.findById({ _id: roomId }, async (err, room) => {
@@ -170,7 +167,8 @@ exports.getRoomUsers = (roomId) => {
 			for (id of room.users) {
 				await Users.findById(id, (err, user) => {
 					if (err) reject(err)
-					users.push(user.name)
+
+					users.push(user?.name)
 				})
 			}
 			resolve(users)

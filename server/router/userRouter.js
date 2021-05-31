@@ -113,7 +113,7 @@ router.patch('/add-friend', async (req, res, next) => {
 			},
 		})
 	} catch (error) {
-		return next(new AppError('Could not find user', 404))
+		return next(new AppError(error, 404))
 	}
 })
 

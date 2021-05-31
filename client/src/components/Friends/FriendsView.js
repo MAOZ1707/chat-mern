@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Avatar } from '@material-ui/core'
 
 import { useHttp } from '../../hooks/useHttp'
@@ -14,7 +14,7 @@ const FriendsView = ({ user, redirect }) => {
 
 	const getUserCharacters = user.name.slice(0, 2).toUpperCase()
 
-	const addFriend = async () => {
+	const addFriend = useCallback(async () => {
 		const admin = { username, userId }
 		try {
 			const response = await sendRequest(
@@ -36,7 +36,7 @@ const FriendsView = ({ user, redirect }) => {
 				redirect('rooms')
 			}
 		} catch (error) {}
-	}
+	}, [])
 
 	return (
 		<div className='friends_view'>
