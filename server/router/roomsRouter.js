@@ -15,7 +15,6 @@ router.get('/:id', async (req, res, next) => {
 router.get('/user/:id', async (req, res, next) => {
 	try {
 		const rooms = await roomsBL.getRoomsByUserId(req.params.id)
-		console.log('USER-ROOMS', rooms)
 
 		res.json({ userRooms: rooms })
 	} catch (error) {
@@ -36,11 +35,9 @@ router.get('/room/:id/users', async (req, res, next) => {
 })
 
 router.post('/create', async (req, res, next) => {
-	console.log(req.body)
 	try {
 		const room = await roomsBL.createRoom(req.body)
 		if (!room) return next(new AppError('no room', 404))
-		console.log(room)
 		res.json({ room: room })
 	} catch (error) {
 		return next(new AppError(error, 404))
@@ -50,7 +47,6 @@ router.post('/create', async (req, res, next) => {
 router.patch('/:id/addUser', async (req, res, next) => {
 	const { email, admin } = req.body
 	const roomId = req.params.id
-	console.log(roomId)
 
 	try {
 		const room = await roomsBL.addUserToRoom(roomId, email, admin)
@@ -59,7 +55,6 @@ router.patch('/:id/addUser', async (req, res, next) => {
 
 		res.json({ room: room })
 	} catch (error) {
-		console.log(error)
 		return next(new AppError(error, 404))
 	}
 })
@@ -72,7 +67,6 @@ router.patch('/:id/removeUser', async (req, res, next) => {
 
 		res.json({ room: room })
 	} catch (error) {
-		console.log(error)
 		return next(new AppError(error, 404))
 	}
 })
@@ -85,7 +79,6 @@ router.delete('/:id/delete', async (req, res, next) => {
 		const loadRoom = await roomsBL.getRoomByUserId(admin)
 		res.json({ userRooms: loadRoom })
 	} catch (error) {
-		console.log(error)
 		return next(new AppError(error, 404))
 	}
 })

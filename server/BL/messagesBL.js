@@ -11,10 +11,11 @@ exports.getMessageById = (msgId) => {
 		resolve(msg)
 	})
 }
+
 exports.saveMessageByRoom = (data) => {
-	return new Promise(async (resolve, reject) => {
-		try {
-			const existingRoom = await Rooms.findById(data.conversationId)
+	return new Promise((resolve, reject) => {
+		Rooms.findById(data.conversationId, (err, existingRoom) => {
+			if (err) reject(err)
 
 			if (!existingRoom) reject('Could not find room')
 
@@ -27,32 +28,26 @@ exports.saveMessageByRoom = (data) => {
 			})
 
 			resolve(newMessage)
-		} catch (error) {
-			reject(error)
-		}
+		})
 	})
 }
 
 exports.getMessageByRoomId = (roomId) => {
-	return new Promise(async (resolve, reject) => {
-		try {
-			const existingRoom = await Rooms.findById(roomId)
+	return new Promise((resolve, reject) => {
+		Rooms.findById(roomId, (err, existingRoom) => {
+			if (err) reject(err)
 			if (!existingRoom) reject('Could not find room')
 
-			let messages = Messages.find(
-				{ conversationId: existingRoom._id },
-				(err, data) => {}
-			)
-
-			resolve(messages)
-		} catch (error) {
-			reject(error)
-		}
+			Messages.find({ conversationId: existingRoom._id }, (err, messages) => {
+				if (err) reject(err)
+				resolve(messages)
+			})
+		})
 	})
 }
 
 exports.showFavoriteMessage = (userId) => {
-	return new Promise(async (resolve, reject) => {
+	return new Promise((resolve, reject) => {
 		Users.findById(userId, (err, user) => {
 			if (err) {
 				reject('Could not find user')
@@ -96,8 +91,8 @@ exports.saveAsFavorite = (favorite, messageId) => {
 				new: true,
 			},
 			(err, data) => {
-				resolve(data)
 				if (err) reject('Something went wrong, pleas try again later')
+				resolve(data)
 			}
 		)
 	})
