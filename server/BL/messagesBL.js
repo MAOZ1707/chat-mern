@@ -41,9 +41,7 @@ exports.getMessageByRoomId = (roomId) => {
 
 			let messages = Messages.find(
 				{ conversationId: existingRoom._id },
-				(err, data) => {
-					console.log(data)
-				}
+				(err, data) => {}
 			)
 
 			resolve(messages)

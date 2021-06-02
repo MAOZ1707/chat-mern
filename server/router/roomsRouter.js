@@ -14,7 +14,7 @@ router.get('/:id', async (req, res, next) => {
 })
 router.get('/user/:id', async (req, res, next) => {
 	try {
-		const rooms = await roomsBL.getRoomByUserId(req.params.id)
+		const rooms = await roomsBL.getRoomsByUserId(req.params.id)
 		console.log('USER-ROOMS', rooms)
 
 		res.json({ userRooms: rooms })
@@ -40,7 +40,7 @@ router.post('/create', async (req, res, next) => {
 	try {
 		const room = await roomsBL.createRoom(req.body)
 		if (!room) return next(new AppError('no room', 404))
-
+		console.log(room)
 		res.json({ room: room })
 	} catch (error) {
 		return next(new AppError(error, 404))

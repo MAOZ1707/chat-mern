@@ -6,6 +6,7 @@ import { useRooms } from '../../context/roomsContext'
 import { useHttp } from '../../hooks/useHttp'
 
 import HighlightOffOutlinedIcon from '@material-ui/icons/HighlightOffOutlined'
+import MessageOutlinedIcon from '@material-ui/icons/MessageOutlined'
 import { Avatar } from '@material-ui/core'
 import GroupAddIcon from '@material-ui/icons/GroupAdd'
 import Menu from '@material-ui/core/Menu'
@@ -31,7 +32,8 @@ const FriendsList = () => {
 		loadUserFriends(userId)
 	}, [loadUserFriends, userId])
 
-	const handleClick = (event) => {
+	const handleClick = (event, friend) => {
+		setSelectedFriend(friend.email)
 		setAnchorEl(event.currentTarget)
 	}
 
@@ -100,10 +102,7 @@ const FriendsList = () => {
 			<h2 className='friend-list__title'>My Friends</h2>
 			{userFriends &&
 				userFriends.map((friend, i) => (
-					<div
-						className='friend-list_view'
-						key={i}
-						onClick={() => sendPrivateMessage(friend.name)}>
+					<div className='friend-list_view' key={i}>
 						<div className='avatar'>
 							<Avatar>PIC</Avatar>
 							{chatUsers &&
@@ -115,11 +114,21 @@ const FriendsList = () => {
 						</div>
 						<div className='friend-list_view__info'>
 							<h2 className='friend-list_name'>{friend.name}</h2>
-							<span aria-controls='simple-menu' aria-haspopup='true'>
-								<GroupAddIcon className='group_icon' onClick={handleClick} />
+							<span
+								aria-controls='simple-menu'
+								aria-haspopup='true'
+								className='friend-list-option'>
+								<GroupAddIcon
+									className='group_icon'
+									onClick={(event) => handleClick(event, friend)}
+								/>
 								<HighlightOffOutlinedIcon
 									className='delete_icon'
 									onClick={() => removeFriend(friend.email)}
+								/>
+								<MessageOutlinedIcon
+									className='msg_icon'
+									onClick={() => sendPrivateMessage(friend.name)}
 								/>
 							</span>
 						</div>
@@ -133,7 +142,7 @@ const FriendsList = () => {
 								rooms.map((room) => (
 									<MenuItem
 										key={room._id}
-										onClick={() => inviteToRoom(room._id, friend.email)}>
+										onClick={() => inviteToRoom(room._id, selectedFriend)}>
 										{room.title}
 									</MenuItem>
 								))}

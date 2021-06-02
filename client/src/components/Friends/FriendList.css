@@ -51,14 +51,20 @@
 	color: #01d293;
 }
 .delete_icon {
-	margin-left: 15px;
 	color: #636363;
 	cursor: pointer;
 }
 .delete_icon:hover {
 	color: #d20101;
 }
+.msg_icon {
+	color: #636363;
+	cursor: pointer;
+}
 
+.msg_icon:hover {
+	color: #016dd2;
+}
 .avatar {
 	flex: 0.3;
 	position: relative;
@@ -74,4 +80,8 @@
 	z-index: 2;
 	bottom: 32px;
 	left: -1px;
+}
+.friend-list-option {
+	display: flex;
+	gap: 10px;
 }

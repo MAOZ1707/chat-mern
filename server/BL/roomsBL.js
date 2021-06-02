@@ -11,57 +11,58 @@ exports.getRoomById = (roomId) => {
 	})
 }
 
-exports.getRoomByUserId = (userId) => {
-	return new Promise(async (resolve, reject) => {
-		let existingUser = await Users.findById(userId)
-		if (!existingUser) reject('Could not find user')
+exports.getRoomsByUserId = (userId) => {
+	return new Promise((resolve, reject) => {
+		Users.findById(userId, async (err, existingUser) => {
+			if (err) reject('Could not find user')
 
-		//  data shaping
-		const userRooms = await Rooms.find()
-			.where('_id')
-			.in(existingUser.rooms)
-			.exec()
+			//  data shaping
+			const userRooms = await Rooms.find({})
+				.where('_id')
+				.in(existingUser.rooms)
+				.exec()
+			console.log(userRooms)
 
-		resolve(userRooms)
+			resolve(userRooms)
+		})
 	})
 }
 
 exports.createRoom = (room) => {
-	return new Promise(async (resolve, reject) => {
+	return new Promise((resolve, reject) => {
 		if (!room) reject('Could not create room, Please check your credentials')
 
-		let checkRoomName
-		try {
-			let userRooms = await Rooms.find({ admin: room.admin })
-			checkRoomName = userRooms.filter(
+		Rooms.find({ admin: room.admin }, async (err, userRooms) => {
+			if (err) reject(err)
+
+			let checkRoomName = userRooms.filter(
 				(existingRoom) => existingRoom.title === room.title
 			)
-		} catch (error) {
-			reject('Something went wrong please try again later')
-		}
 
-		if (checkRoomName && checkRoomName.length > 0) {
-			reject('Room name must be unique!')
-		}
+			if (checkRoomName && checkRoomName.length > 0) {
+				reject('Room name must be unique!')
+			} else {
+				let newRoom = await Rooms.create({
+					created: room.created,
+					title: room.title,
+					users: [room.admin],
+					admin: room.admin,
+				})
 
-		let newRoom = await Rooms.create({
-			created: room.created,
-			title: room.title,
-			users: [room.admin],
-			admin: room.admin,
+				if (!newRoom) {
+					reject('We have a problem please try again later')
+				}
+				await Users.findByIdAndUpdate(newRoom.admin, {
+					$addToSet: { rooms: newRoom._id },
+				})
+
+				resolve(newRoom)
+			}
 		})
-
-		if (!newRoom) {
-			reject('We have a problem please try again later')
-		}
-		await Users.findByIdAndUpdate(newRoom.admin, {
-			$addToSet: { rooms: newRoom._id },
-		})
-
-		resolve(newRoom)
 	})
 }
 
+// TODO:
 exports.deleteRoom = (roomId, admin) => {
 	return new Promise(async (resolve, reject) => {
 		// check room
@@ -94,41 +95,41 @@ exports.deleteRoom = (roomId, admin) => {
 }
 
 exports.addUserToRoom = (roomId, friendEmail, admin) => {
-	return new Promise(async (resolve, reject) => {
-		let existingUser = await Users.findOne({ email: friendEmail })
-		if (!existingUser) reject('Could not find user')
+	return new Promise((resolve, reject) => {
+		Users.findOne({ email: friendEmail }, (err, existingUser) => {
+			if (err) reject('Could not find user')
+			Rooms.findById(roomId, (err, room) => {
+				if (err) reject('Could not find room')
 
-		let room = await Rooms.findById(roomId)
-		if (!room) reject('Could not find room')
+				// check if user is admin
+				if (room.admin.toString() !== admin.toString()) {
+					reject(
+						'Sorry you dont have permission !, only admin can add / delete users'
+					)
+				}
 
-		// check if user is admin
-		if (room.admin.toString() !== admin.toString()) {
-			reject(
-				'Sorry you dont have permission !, only admin can add / delete users'
-			)
-		}
-
-		// add room to user rooms
-		Users.findByIdAndUpdate(
-			existingUser._id,
-			{
-				$addToSet: { rooms: room._id },
-			},
-			(err, data) => {
-				if (err) reject(err)
-				// resolve(data)
-				Rooms.findByIdAndUpdate(
-					room._id,
+				// add room to user rooms
+				Users.findByIdAndUpdate(
+					existingUser._id,
 					{
-						$addToSet: { users: data._id },
+						$addToSet: { rooms: room._id },
 					},
 					(err, data) => {
 						if (err) reject(err)
-						resolve(data)
+						Rooms.findByIdAndUpdate(
+							room._id,
+							{
+								$addToSet: { users: data._id },
+							},
+							(err, data) => {
+								if (err) reject(err)
+								resolve(data)
+							}
+						)
 					}
 				)
-			}
-		)
+			})
+		})
 	})
 }
 
