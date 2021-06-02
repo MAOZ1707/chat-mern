@@ -36,6 +36,8 @@ router.post('/login', async (req, res, next) => {
 	}
 })
 
+// TODO:Auth
+
 // Validation
 // router.use(validateToken)
 

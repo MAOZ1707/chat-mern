@@ -24,12 +24,10 @@ io.on('connect', (socket) => {
 	socket.on('userJoin', (username) => {
 		users[socket.id] = username
 		socket.join(username)
-		console.log('Users after connection', users)
 		io.emit('userList', [...new Set(Object.values(users))])
 	})
 
 	socket.on('sendMessage', (newMessage) => {
-		console.log(newMessage)
 		if (newMessage.private) {
 			io.to(newMessage.to).emit('sendMessage', {
 				name: newMessage.name,
