@@ -32,7 +32,7 @@ const Signup = () => {
 			console.log(values)
 			try {
 				const response = await sendRequest(
-					`${process.env.REACT_APP_BACKEND_URL}/users/signup`,
+					`http://localhost:5000/users/signup`,
 					'POST',
 					{
 						name: values.name,

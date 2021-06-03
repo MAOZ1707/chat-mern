@@ -13,7 +13,7 @@ const StarMessages = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			const response = await sendRequest(
-				`${process.env.REACT_APP_BACKEND_URL}/messages/user/${userId}/favorite`,
+				`http://localhost:5000/messages/user/${userId}/favorite`,
 				'Get'
 			)
 			if (response.status === 200) {

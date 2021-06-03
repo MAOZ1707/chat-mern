@@ -26,7 +26,7 @@ const Login = () => {
 		onSubmit: async (values) => {
 			try {
 				const response = await sendRequest(
-					`${process.env.REACT_APP_BACKEND_URL}/users/login`,
+					`http://localhost:5000/users/login`,
 					'POST',
 					{
 						email: values.email,

@@ -16,7 +16,7 @@ export function MessageProvider({ children }) {
 		if (data) {
 			try {
 				await axios({
-					url: `${process.env.REACT_APP_BACKEND_URL}/messages/save`,
+					url: `http://localhost:5000/messages/save`,
 					method: 'POST',
 					data: {
 						messages: data.text,
@@ -40,7 +40,7 @@ export function MessageProvider({ children }) {
 		if (roomId) {
 			try {
 				const getData = await axios({
-					url: `${process.env.REACT_APP_BACKEND_URL}/messages/room/${roomId}`,
+					url: `http://localhost:5000/messages/room/${roomId}`,
 					method: 'GET',
 					headers: {
 						'Content-Type': 'application/json',

@@ -8,8 +8,6 @@ const dotenv = require('dotenv')
 dotenv.config({ path: './config.env' })
 
 const app = express()
-// const httpServer = require('http').createServer(app)
-// const io = require('socket.io')(httpServer, {cors: {origin: '*'}})
 
 app.use(cors({ origin: true, credentials: true }))
 app.use(express.json())
@@ -17,6 +15,20 @@ app.use(morgan('dev'))
 
 // connect to database
 require('./config/database')
+app.use(function (req, res, next) {
+	res.header('Access-Control-Allow-Origin', '*')
+	res.header('Access-Control-Allow-Credentials', true)
+	res.header(
+		'Access-Control-Allow-Methods',
+		'GET,PUT,POST,PATCH,DELETE,OPTIONS'
+	)
+	res.header(
+		'Access-Control-Allow-Headers',
+		'Origin,X-Requested-With,Content-Type',
+		'Accept,content-type,application/json'
+	)
+	next()
+})
 
 // Routes
 const usersRouter = require('./router/userRouter')
@@ -26,9 +38,6 @@ const messagesRouter = require('./router/messagesRouter')
 app.use('/users', usersRouter)
 app.use('/rooms', roomsRouter)
 app.use('/messages', messagesRouter)
-
-// read build file
-app.use('/', express.static(path.join(__dirname, '../client/build')))
 
 app.all('*', (req, res, next) => {
 	next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404))

@@ -14,7 +14,7 @@ const Message = ({ content, send }) => {
 
 	const handleClick = async () => {
 		const response = await sendRequest(
-			`${process.env.REACT_APP_BACKEND_URL}/messages/${content._id}/favorite`,
+			`http://localhost:5000/messages/${content._id}/favorite`,
 			'POST',
 			{ favorite: !starMessage }
 		)

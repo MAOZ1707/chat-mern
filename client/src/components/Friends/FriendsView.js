@@ -19,7 +19,7 @@ const FriendsView = ({ user, redirect }) => {
 		const admin = { username, userId }
 		try {
 			const response = await sendRequest(
-				`${process.env.REACT_APP_BACKEND_URL}/users/add`,
+				`http://localhost:5000/users/add`,
 				'POST',
 				{
 					friend: user,

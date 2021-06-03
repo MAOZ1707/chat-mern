@@ -44,7 +44,7 @@ router.post('/create', async (req, res, next) => {
 	}
 })
 
-router.patch('/:id/addUser', async (req, res, next) => {
+router.post('/:id/addUser', async (req, res, next) => {
 	const { email, admin } = req.body
 	const roomId = req.params.id
 
@@ -76,7 +76,7 @@ router.delete('/:id/delete', async (req, res, next) => {
 
 	try {
 		await roomsBL.deleteRoom(req.params.id, admin)
-		const loadRoom = await roomsBL.getRoomByUserId(admin)
+		const loadRoom = await roomsBL.getRoomsByUserId(admin)
 		res.json({ userRooms: loadRoom })
 	} catch (error) {
 		return next(new AppError(error, 404))

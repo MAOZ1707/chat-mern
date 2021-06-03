@@ -62,7 +62,6 @@ exports.createRoom = (room) => {
 	})
 }
 
-// TODO:
 exports.deleteRoom = (roomId, admin) => {
 	return new Promise(async (resolve, reject) => {
 		// check room

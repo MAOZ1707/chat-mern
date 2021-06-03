@@ -26,7 +26,7 @@ const CreateRoom = ({ redirect }) => {
 		onSubmit: async (values) => {
 			try {
 				const response = await sendRequest(
-					`${process.env.REACT_APP_BACKEND_URL}/rooms/create`,
+					`http://localhost:5000/rooms/create`,
 					'POST',
 					{
 						title: values.name,

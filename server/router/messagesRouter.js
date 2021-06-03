@@ -34,7 +34,7 @@ router.get('/room/:id', async (req, res, next) => {
 	}
 })
 
-router.patch('/:id/favorite', async (req, res, next) => {
+router.post('/:id/favorite', async (req, res, next) => {
 	let messageId = req.params.id
 	let { favorite } = req.body
 

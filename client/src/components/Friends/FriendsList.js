@@ -40,7 +40,7 @@ const FriendsList = () => {
 	const inviteToRoom = async (roomId, email) => {
 		try {
 			const response = await sendRequest(
-				`${process.env.REACT_APP_BACKEND_URL}/rooms/${roomId}/addUser`,
+				`http://localhost:5000/rooms/${roomId}/addUser`,
 				'POST',
 				{
 					email: email,
@@ -63,7 +63,7 @@ const FriendsList = () => {
 	const removeFriend = async (friendEmail) => {
 		try {
 			const response = await sendRequest(
-				`${process.env.REACT_APP_BACKEND_URL}/users/remove-friend`,
+				`http://localhost:5000/users/remove-friend`,
 				'POST',
 				{
 					admin: userId,

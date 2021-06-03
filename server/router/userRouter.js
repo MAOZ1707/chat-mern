@@ -103,8 +103,9 @@ router.get('/find-friend/', async (req, res, next) => {
 	}
 })
 
-router.patch('/add-friend', async (req, res, next) => {
+router.post('/add', async (req, res, next) => {
 	const { friend, admin } = req.body
+	console.log(req.body)
 	try {
 		let user = await usersBL.addFriend(friend, admin)
 
@@ -119,7 +120,7 @@ router.patch('/add-friend', async (req, res, next) => {
 	}
 })
 
-router.patch('/remove-friend', async (req, res, next) => {
+router.post('/remove-friend', async (req, res, next) => {
 	const { admin, friendEmail } = req.body
 
 	try {
