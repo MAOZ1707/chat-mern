@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Avatar } from '@material-ui/core'
 
 import { useHttp } from '../../hooks/useHttp'
@@ -11,6 +11,7 @@ const FriendsView = ({ user, redirect }) => {
 	const { sendRequest } = useHttp()
 	const { username, userId } = useAuth()
 	const { setUserFriends, userFriends } = useUsers()
+	const [load, setLoad] = useState(false)
 
 	const getUserCharacters = user.name.slice(0, 2).toUpperCase()
 
@@ -33,7 +34,8 @@ const FriendsView = ({ user, redirect }) => {
 			setUserFriends([...userFriends, data.user])
 
 			if (response.statusText === 'OK') {
-				redirect('rooms')
+				// redirect('rooms')
+				setLoad((prev) => !prev)
 			}
 		} catch (error) {}
 	}, [])
