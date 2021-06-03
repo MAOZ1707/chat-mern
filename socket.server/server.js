@@ -35,7 +35,6 @@ io.on('connect', (socket) => {
 			})
 		}
 
-		//	TODOS -- PUT HERE THE USER ID/OR CREATE A NEW SENDmESSAGE
 		io.to(newMessage.room).emit('sendMessage', {
 			name: newMessage.name,
 			text: newMessage.text,

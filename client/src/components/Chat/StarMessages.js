@@ -14,9 +14,9 @@ const StarMessages = () => {
 		const fetchData = async () => {
 			const response = await sendRequest(
 				`http://localhost:5000/messages/user/${userId}/favorite`,
-				'Get'
+				'GET'
 			)
-			if (response.status === 200) {
+			if (response.statusText === 'OK') {
 				setMessages(response.data.message)
 			}
 		}

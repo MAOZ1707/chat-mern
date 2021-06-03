@@ -55,25 +55,25 @@ exports.showFavoriteMessage = (userId) => {
 				Rooms.find({ users: { $in: user._id } }, async (err, rooms) => {
 					if (err) reject('Could not find rooms')
 
-					let allMessages = []
 					for (let room of rooms) {
 						let roomMessage = await Messages.find({ conversationId: room._id })
 						if (roomMessage.length > 0) {
 							let shapeData = roomMessage.filter((msg) => {
 								if (msg.favorite === true) {
-									return {
-										text: msg.text,
-										room: room.title,
-									}
-								} else {
-									return
+									return msg
 								}
 							})
-							allMessages.push(shapeData)
+
+							let finalData = shapeData.map((data) => {
+								return {
+									text: data.text,
+									room: room.title,
+								}
+							})
+
+							resolve(finalData)
 						}
 					}
-					const resultData = allMessages.flat(Infinity)
-					resolve(resultData)
 				})
 			}
 		})

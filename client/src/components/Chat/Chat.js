@@ -61,9 +61,9 @@ const Chat = ({ socket }) => {
 		}
 		socket.emit('sendMessage', newMessage)
 		setMessage({ name: message.name, text: '', room: '' })
-
 		setLastMessage({ roomId: selectedRoom._id, text: message.text })
 		saveMessage(newMessage)
+		setOpenEmoji(false)
 	}
 
 	const handleChange = (e) => {
