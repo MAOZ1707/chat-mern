@@ -15,11 +15,12 @@ const Message = ({ content, send }) => {
 	const handleClick = async () => {
 		const response = await sendRequest(
 			`${process.env.REACT_APP_BACKEND_URL}/messages/${content._id}/favorite`,
-			'PATCH',
+			'POST',
 			{ favorite: !starMessage }
 		)
 		const { message } = response.data
-		if (response.status === 200) {
+		console.log(response.data)
+		if (response.statusText === 'OK') {
 			setStarMessage(message.favorite)
 		}
 	}

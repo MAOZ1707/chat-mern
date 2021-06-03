@@ -8,7 +8,7 @@ import { useUsers } from '../../context/userContext'
 import './Friends.css'
 
 const FriendsView = ({ user, redirect }) => {
-	const { sendRequest } = useHttp()
+	const { error, sendRequest } = useHttp()
 	const { username, userId } = useAuth()
 	const { setUserFriends, userFriends } = useUsers()
 	const [load, setLoad] = useState(false)
@@ -19,14 +19,15 @@ const FriendsView = ({ user, redirect }) => {
 		const admin = { username, userId }
 		try {
 			const response = await sendRequest(
-				`https://chat-message-application.herokuapp.com/users/add-friend`,
-				'PATCH',
+				`${process.env.REACT_APP_BACKEND_URL}/users/add`,
+				'POST',
 				{
 					friend: user,
 					admin: admin,
 				},
 				{
 					'Content-Type': 'application/json',
+					'Access-Control-Allow-Origin': '*',
 					// Authorization: 'Bearer ' + token,
 				}
 			)
@@ -34,11 +35,15 @@ const FriendsView = ({ user, redirect }) => {
 			setUserFriends([...userFriends, data.user])
 
 			if (response.statusText === 'OK') {
-				// redirect('rooms')
+				redirect('rooms')
 				setLoad((prev) => !prev)
 			}
-		} catch (error) {}
+		} catch (error) {
+			console.log(error)
+		}
 	}, [])
+
+	console.log(error)
 
 	return (
 		<div className='friends_view'>
@@ -49,7 +54,7 @@ const FriendsView = ({ user, redirect }) => {
 			</div>
 			<div className='friends_view__footer'>
 				<button className='friends__btn_add' onClick={addFriend}>
-					Add
+					Add to list
 				</button>
 			</div>
 		</div>

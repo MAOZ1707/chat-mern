@@ -47,8 +47,6 @@ const CreateRoom = ({ redirect }) => {
 		},
 	})
 
-	console.log(error)
-
 	return (
 		<div className='create-room__container'>
 			<h3 className='create-room__title'>Create room</h3>

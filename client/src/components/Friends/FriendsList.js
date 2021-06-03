@@ -41,7 +41,7 @@ const FriendsList = () => {
 		try {
 			const response = await sendRequest(
 				`${process.env.REACT_APP_BACKEND_URL}/rooms/${roomId}/addUser`,
-				'patch',
+				'POST',
 				{
 					email: email,
 					admin: userId,
@@ -64,7 +64,7 @@ const FriendsList = () => {
 		try {
 			const response = await sendRequest(
 				`${process.env.REACT_APP_BACKEND_URL}/users/remove-friend`,
-				'patch',
+				'POST',
 				{
 					admin: userId,
 					friendEmail,
