@@ -18,7 +18,7 @@ const FriendsView = ({ user, redirect }) => {
 		const admin = { username, userId }
 		try {
 			const response = await sendRequest(
-				`${process.env.REACT_APP_BACKEND_URL}/users/add-friend`,
+				`https://chat-message-application.herokuapp.com/users/add-friend`,
 				'PATCH',
 				{
 					friend: user,
