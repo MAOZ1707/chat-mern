@@ -11,7 +11,8 @@ export function SocketProvider({ id, children }) {
 	const [socket, setSocket] = useState()
 	const [chatUsers, setChatUsers] = useState([])
 
-	const ENDPOINT = 'http://localhost:8000'
+	// const ENDPOINT = 'http://localhost:8000'
+	const ENDPOINT = 'https://server-socket-v2.herokuapp.com/'
 	useEffect(() => {
 		const newSocket = io(ENDPOINT)
 		setSocket(newSocket)

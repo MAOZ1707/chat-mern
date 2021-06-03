@@ -14,7 +14,7 @@ export function RoomsProvider({ children }) {
 
 	const loadRooms = async (userId) => {
 		const response = await axios.get(
-			`http://localhost:5000/rooms/user/${userId}`
+			`${process.env.REACT_APP_BACKEND_URL}/rooms/user/${userId}`
 		)
 		const data = await response.data.userRooms
 		setRooms(data)
@@ -28,14 +28,16 @@ export function RoomsProvider({ children }) {
 
 	const loadRoomUsers = async (roomId) => {
 		const response = await axios.get(
-			`http://localhost:5000/rooms/room/${roomId}/users`
+			`${process.env.REACT_APP_BACKEND_URL}/rooms/room/${roomId}/users`
 		)
 		const { roomUsers } = await response.data
 		setRoomUsers(roomUsers)
 	}
 
 	const chooseRoom = useCallback(async (roomId) => {
-		const response = await axios.get(`http://localhost:5000/rooms/${roomId}`)
+		const response = await axios.get(
+			`${process.env.REACT_APP_BACKEND_URL}/rooms/${roomId}`
+		)
 		const data = await response.data.room
 		setSelectedRoom(data)
 	}, [])

@@ -1,4 +1,4 @@
-import {useCallback, useState} from 'react'
+import { useCallback, useState } from 'react'
 import axios from 'axios'
 
 export const useHttp = () => {
@@ -23,8 +23,8 @@ export const useHttp = () => {
 				setIsLoading(false)
 			}
 		},
-		[],
+		[]
 	)
 
-	return {error, isLoading, sendRequest}
+	return { error, isLoading, sendRequest }
 }

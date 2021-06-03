@@ -1,18 +1,18 @@
 import React from 'react'
 import moment from 'moment'
 
-import {useFormik} from 'formik'
+import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import {useAuth} from '../../context/authContext'
-import {useHttp} from '../../hooks/useHttp'
+import { useAuth } from '../../context/authContext'
+import { useHttp } from '../../hooks/useHttp'
 
 import './CreateRoom.css'
-import {useRooms} from '../../context/roomsContext'
+import { useRooms } from '../../context/roomsContext'
 
-const CreateRoom = ({redirect}) => {
-	const {error, isLoading, sendRequest} = useHttp()
-	const {loadRooms} = useRooms()
-	const {token, userId} = useAuth()
+const CreateRoom = ({ redirect }) => {
+	const { error, isLoading, sendRequest } = useHttp()
+	const { loadRooms } = useRooms()
+	const { token, userId } = useAuth()
 
 	const formik = useFormik({
 		initialValues: {
@@ -26,7 +26,7 @@ const CreateRoom = ({redirect}) => {
 		onSubmit: async (values) => {
 			try {
 				const response = await sendRequest(
-					'/rooms/create',
+					`${process.env.REACT_APP_BACKEND_URL}/rooms/create`,
 					'POST',
 					{
 						title: values.name,
@@ -36,7 +36,7 @@ const CreateRoom = ({redirect}) => {
 					{
 						'Content-Type': 'application/json',
 						Authorization: 'Bearer ' + token,
-					},
+					}
 				)
 				// const {data} = response
 				if (response.statusText === 'OK') {
@@ -59,8 +59,7 @@ const CreateRoom = ({redirect}) => {
 					htmlFor='name'
 					className={`create-room__label create-room__label__name ${
 						!formik.errors.name && formik.touched.name && 'create-room__success'
-					}`}
-				>
+					}`}>
 					Room name
 				</label>
 

@@ -15,14 +15,19 @@ export function UsersProvider({ children }) {
 	const [userFriends, setUserFriends] = useState([])
 
 	async function loadUsers() {
-		const response = await axios.get('http://localhost:5000/users')
+		const response = await axios.get(
+			`${process.env.REACT_APP_BACKEND_URL}/users`
+		)
 		const data = await response.data.users
 		setUsers(data)
 	}
 
 	const loadUserFriends = useCallback(async (userId) => {
 		try {
-			const response = await sendRequest(`http://localhost:5000/users/${userId}/friends`, 'GET')
+			const response = await sendRequest(
+				`${process.env.REACT_APP_BACKEND_URL}/users/${userId}/friends`,
+				'GET'
+			)
 			const { data } = response
 			setUserFriends(data.friends)
 		} catch (error) {}

@@ -21,7 +21,9 @@ const Friends = ({ redirect }) => {
 		onSubmit: async (values) => {
 			try {
 				const response = await sendRequest(
-					`http://localhost:5000/users//find-friend${'?email=' + values.email}`,
+					`${process.env.REACT_APP_BACKEND_URL}/users/find-friend${
+						'?email=' + values.email
+					}`,
 					'GET'
 				)
 				const { data } = response

@@ -37,7 +37,7 @@ const SideBarChat = ({ room }) => {
 		const getLastRoomMessage = async (roomId) => {
 			try {
 				const getData = await axios({
-					url: `/messages/room/${roomId}`,
+					url: `${process.env.REACT_APP_BACKEND_URL}/messages/room/${roomId}`,
 					method: 'GET',
 					headers: {
 						'Content-Type': 'application/json',
@@ -68,9 +68,11 @@ const SideBarChat = ({ room }) => {
 
 	const deleteRoom = async (roomId) => {
 		const response = await sendRequest(
-			`http://localhost:5000/rooms/${roomId}/delete`,
+			`${process.env.REACT_APP_BACKEND_URL}/rooms/${roomId}/delete`,
 			'DELETE',
-			{ admin: userId }
+			{
+				admin: userId,
+			}
 		)
 		const { userRooms } = response.data
 		if (response.status === 200) {

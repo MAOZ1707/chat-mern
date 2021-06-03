@@ -1,16 +1,16 @@
-import {useFormik} from 'formik'
+import { useFormik } from 'formik'
 import React from 'react'
 import * as Yup from 'yup'
 
-import {useHttp} from '../../hooks/useHttp'
-import {useAuth} from '../../context/authContext'
+import { useHttp } from '../../hooks/useHttp'
+import { useAuth } from '../../context/authContext'
 
 import './Auth.css'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 const Login = () => {
-	const {error, isLoading, sendRequest} = useHttp()
-	const {login} = useAuth()
+	const { error, isLoading, sendRequest } = useHttp()
+	const { login } = useAuth()
 
 	const formik = useFormik({
 		initialValues: {
@@ -26,7 +26,7 @@ const Login = () => {
 		onSubmit: async (values) => {
 			try {
 				const response = await sendRequest(
-					'http://localhost:5000/users/login',
+					`${process.env.REACT_APP_BACKEND_URL}/users/login`,
 					'POST',
 					{
 						email: values.email,
@@ -34,7 +34,7 @@ const Login = () => {
 					},
 					{
 						'Content-Type': 'application/json',
-					},
+					}
 				)
 				const data = response.data
 				login(data.user._id, data.token, data.user.name)
@@ -52,8 +52,7 @@ const Login = () => {
 					htmlFor='email'
 					className={`auth__label auth__label__email ${
 						!formik.errors.email && formik.touched.email && 'auth__success'
-					}`}
-				>
+					}`}>
 					Email
 					{formik.touched.email && formik.errors.email ? (
 						<span className='auth__error__msg'>{formik.errors.email}</span>
@@ -76,8 +75,7 @@ const Login = () => {
 						!formik.errors.password &&
 						formik.touched.password &&
 						'auth__success'
-					}`}
-				>
+					}`}>
 					Password
 					{formik.touched.password && formik.errors.password ? (
 						<span className='auth__error__msg'>{formik.errors.password}</span>

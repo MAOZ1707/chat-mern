@@ -14,7 +14,7 @@ const Message = ({ content, send }) => {
 
 	const handleClick = async () => {
 		const response = await sendRequest(
-			`/messages/${content._id}/favorite`,
+			`${process.env.REACT_APP_BACKEND_URL}/messages/${content._id}/favorite`,
 			'PATCH',
 			{ favorite: !starMessage }
 		)
