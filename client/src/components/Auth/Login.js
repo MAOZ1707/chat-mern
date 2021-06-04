@@ -7,6 +7,7 @@ import { useAuth } from '../../context/authContext'
 
 import './Auth.css'
 import { Link } from 'react-router-dom'
+import Loader from '../../UiElements/Loader/Loader'
 
 const Login = () => {
 	const { error, isLoading, sendRequest } = useHttp()
@@ -46,7 +47,7 @@ const Login = () => {
 		<div className='auth__container'>
 			<h3 className='aut__title'>Login</h3>
 			{error && <div>{error}</div>}
-			{isLoading && <div>Loading....</div>}
+			{isLoading && <Loader />}
 			<form onSubmit={formik.handleSubmit} className='auth__form'>
 				<label
 					htmlFor='email'

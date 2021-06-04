@@ -1,17 +1,19 @@
-import React, { useState } from 'react'
+import React, { useState, Suspense } from 'react'
 
-import Rooms from '../Rooms/Rooms'
 import { useRooms } from '../../context/roomsContext'
 import { AddOutlined, SupervisorAccount } from '@material-ui/icons'
 import ChatOutlinedIcon from '@material-ui/icons/ChatOutlined'
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined'
 import { Avatar, IconButton, Menu, MenuItem } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import CreateRoom from '../Rooms/CreateRoom'
 
 import './SideBar.css'
-import Friends from '../Friends/Friends'
-import FriendsList from '../Friends/FriendsList'
+import Loader from '../../UiElements/Loader/Loader'
+
+const Rooms = React.lazy(() => import('../Rooms/Rooms'))
+const CreateRoom = React.lazy(() => import('../Rooms/CreateRoom'))
+const Friends = React.lazy(() => import('../Friends/Friends'))
+const FriendsList = React.lazy(() => import('../Friends/FriendsList'))
 
 const useStyles = makeStyles((theme) => ({
 	small: {
@@ -101,7 +103,9 @@ const SideBar = ({ socket, username }) => {
 				</div>
 			</div>
 
-			<div className='sidebar__chat'>{localRoute}</div>
+			<div className='sidebar__chat'>
+				<Suspense fallback={<Loader />}>{localRoute}</Suspense>
+			</div>
 		</div>
 	)
 }

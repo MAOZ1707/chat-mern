@@ -8,6 +8,7 @@ import { useHttp } from '../../hooks/useHttp'
 
 import './CreateRoom.css'
 import { useRooms } from '../../context/roomsContext'
+import Loader from '../../UiElements/Loader/Loader'
 
 const CreateRoom = ({ redirect }) => {
 	const { error, isLoading, sendRequest } = useHttp()
@@ -51,7 +52,7 @@ const CreateRoom = ({ redirect }) => {
 		<div className='create-room__container'>
 			<h3 className='create-room__title'>Create room</h3>
 			{error && <div>{error}</div>}
-			{isLoading && <div>Loading....</div>}
+			{isLoading && <Loader />}
 			<form onSubmit={formik.handleSubmit} className='create-room__form'>
 				<label
 					htmlFor='name'

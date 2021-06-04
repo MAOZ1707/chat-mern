@@ -1,14 +1,19 @@
+import React from 'react'
 import { UsersProvider } from './context/userContext'
 import { RoomsProvider } from './context/roomsContext'
 import { ThemeContextProvider } from './context/themeContext'
 import { MessageProvider } from './context/messageContext'
 import { SocketProvider } from './context/socketContext'
-
 import { useAuth } from './context/authContext'
-import Dashboard from './components/Dashboard/Dashboard'
-import AuthContainer from './components/Auth/AuthContainer'
 
 import './App.css'
+
+import { Suspense } from 'react'
+import Loader from './UiElements/Loader/Loader'
+const Dashboard = React.lazy(() => import('./components/Dashboard/Dashboard'))
+const AuthContainer = React.lazy(() =>
+	import('./components/Auth/AuthContainer')
+)
 
 function App() {
 	const { token, username, userId } = useAuth()
@@ -21,7 +26,9 @@ function App() {
 						<RoomsProvider>
 							<MessageProvider>
 								<ThemeContextProvider>
-									<Dashboard user={username} />
+									<Suspense fallback={<Loader />}>
+										<Dashboard user={username} />
+									</Suspense>
 								</ThemeContextProvider>
 							</MessageProvider>
 						</RoomsProvider>
@@ -31,7 +38,13 @@ function App() {
 		</div>
 	)
 
-	return token && username ? dashboard : <AuthContainer />
+	return token && username ? (
+		dashboard
+	) : (
+		<Suspense fallback={<Loader />}>
+			<AuthContainer />
+		</Suspense>
+	)
 }
 
 export default App

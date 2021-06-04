@@ -6,6 +6,7 @@ import { useHttp } from '../../hooks/useHttp'
 import FriendsView from './FriendsView'
 
 import './Friends.css'
+import Loader from '../../UiElements/Loader/Loader'
 
 const Friends = ({ redirect }) => {
 	const { error, isLoading, sendRequest } = useHttp()
@@ -34,7 +35,7 @@ const Friends = ({ redirect }) => {
 		<div className='friends__container'>
 			<h3 className='friends__title'>Add Friends</h3>
 			{error && <div>{error}</div>}
-			{isLoading && <div>Loading....</div>}
+			{isLoading && <Loader />}
 			<form onSubmit={formik.handleSubmit} className='friends__form'>
 				<label
 					htmlFor='email'
