@@ -1,111 +1,76 @@
-import moment from 'moment'
 import { useEffect, useState } from 'react'
-import io from 'socket.io-client'
-
 import { useAuth } from '../../../context/authContext'
 import { useMessage } from '../../../context/messageContext'
 import { useRooms } from '../../../context/roomsContext'
+import { useSocket } from '../../../context/socketContext'
+import moment from 'moment'
 
-let socket
-const ChatLogic = () => {
+const ChatLogic = (socket) => {
 	const { selectedRoom } = useRooms()
 	const { username } = useAuth()
+	const { chatUsers, setChatUsers } = useSocket()
 	const { saveMessage, conversationMsgs, setLastMessage } = useMessage()
-	const [message, setMessage] = useState({ name: '', text: '', room: '' })
-	const [messageList, setMessageList] = useState(conversationMsgs || [])
-	const [chatUsers, setChatUsers] = useState([])
-	const [oldRoom, setOldRoom] = useState('')
 
-	const ENDPOINT = 'http://localhost:8000'
+	const [message, setMessage] = useState({ name: username, text: '', room: '' })
+	const [messages, setMessages] = useState(conversationMsgs || [])
 
-	// useEffect(() => {
-	// 	socket = io(ENDPOINT)
+	const [searchTerm, setSearchTerm] = useState('')
+	const [openEmoji, setOpenEmoji] = useState(false)
 
-	// 	return () => {
-	// 		socket.disconnect()
-	// 		socket.off()
-	// 	}
-	// }, [ENDPOINT])
+	useEffect(() => {
+		socket.emit('userJoin', username)
+	}, [])
 
-	// useEffect(() => {
-	// 	if (conversationMsgs) {
-	// 		setMessageList(conversationMsgs)
-	// 	}
-	// }, [conversationMsgs, selectedRoom])
+	useEffect(() => {
+		if (conversationMsgs) setMessages(conversationMsgs)
+	}, [conversationMsgs, selectedRoom])
 
-	// useEffect(() => {
-	// 	if (selectedRoom) {
-	// 		socket.emit('userJoin', username)
-	// 	}
-	// 	return () => {
-	// 		if (selectedRoom) {
-	// 			console.log('user leave')
-	// 			socket.emit('leave room', username)
-	// 		}
-	// 	}
-	// }, [])
+	useEffect(() => {
+		socket.on('sendMessage', (newMessage) => {
+			setMessages((prev) => [...prev, newMessage])
+		})
+	}, [])
 
-	// useEffect(() => {
-	// 	if (selectedRoom) {
-	// 		socket.emit('roomEntered', {
-	// 			leaveRoom: oldRoom,
-	// 			newRoom: selectedRoom.title,
-	// 		})
-	// 		setMessageList([])
-	// 	}
+	useEffect(() => {
+		socket.on('userList', (userList) => {
+			setChatUsers(userList)
+		})
+	}, [chatUsers])
 
-	// 	return () => {
-	// 		if (selectedRoom) {
-	// 			setOldRoom(selectedRoom.title)
-	// 		}
-	// 	}
-	// }, [selectedRoom, oldRoom])
+	const sendMessage = (e) => {
+		e.preventDefault()
+		let format = moment().format('HH:mm a')
+		const newMessage = {
+			name: message.name,
+			text: message.text,
+			room: selectedRoom.title,
+			time: format,
+			roomId: selectedRoom._id,
+		}
+		socket.emit('sendMessage', newMessage)
+		setMessage({ name: message.name, text: '', room: '' })
+		setLastMessage({ roomId: selectedRoom._id, text: message.text })
+		saveMessage(newMessage)
+		setOpenEmoji(false)
+	}
 
-	// useEffect(() => {
-	// 	socket.once('newMessage', (newMessage) => {
-	// 		setMessageList([
-	// 			...messageList,
-	// 			{ name: newMessage.name, text: newMessage.text },
-	// 		])
-	// 	})
-
-	// 	if (username) {
-	// 		socket.on('userList', (userList) => {
-	// 			setChatUsers(userList)
-	// 			setMessage({ name: username, text: message.text })
-	// 		})
-	// 	}
-	// }, [message.text, messageList, username])
-
-	// const handleChange = (e) => {
-	// 	setMessage({ ...message, text: e.target.value })
-	// }
-
-	// const handleSubmit = (e) => {
-	// 	e.preventDefault()
-
-	// 	let format = moment(new Date()).format('HH:mm a')
-
-	// 	const newMessage = {
-	// 		name: message.name,
-	// 		text: message.text,
-	// 		room: selectedRoom.title,
-	// 		time: format,
-	// 		roomId: selectedRoom._id,
-	// 	}
-	// 	socket.emit('newMessage', newMessage)
-	// 	setMessage({ name: username, text: '' })
-	// 	setLastMessage({ roomId: selectedRoom._id, text: message.text })
-	// 	saveMessage(newMessage)
-	// }
+	const handleChange = (e) => {
+		setMessage({ ...message, text: e.target.value })
+	}
+	const onEmojiClick = (event, emojiObject) => {
+		setMessage({ ...message, text: message.text + emojiObject.emoji })
+	}
 
 	return {
+		handleChange,
+		onEmojiClick,
+		sendMessage,
 		message,
-		messageList,
-		oldRoom,
-		// handleChange,
-		// handleSubmit,
-		chatUsers,
+		messages,
+		searchTerm,
+		setSearchTerm,
+		openEmoji,
+		setOpenEmoji,
 	}
 }
 

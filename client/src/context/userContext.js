@@ -1,4 +1,3 @@
-import axios from 'axios'
 import React, { useCallback, useContext, useState } from 'react'
 import { useHttp } from '../hooks/useHttp'
 
@@ -14,11 +13,13 @@ export function UsersProvider({ children }) {
 	const [users, setUsers] = useState([])
 	const [userFriends, setUserFriends] = useState([])
 
-	async function loadUsers() {
-		const response = await axios.get(`http://localhost:5000/users`)
-		const data = await response.data.users
-		setUsers(data)
-	}
+	const loadUsers = useCallback(async () => {
+		try {
+			const response = await sendRequest(`http://localhost:5000/users`, 'GET')
+			const data = await response.data.users
+			setUsers(data)
+		} catch (error) {}
+	}, [])
 
 	const loadUserFriends = useCallback(async (userId) => {
 		try {

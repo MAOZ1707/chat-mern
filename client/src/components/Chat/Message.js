@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import moment from 'moment'
 
 import { useHttp } from '../../hooks/useHttp'
@@ -19,7 +19,6 @@ const Message = ({ content, send }) => {
 			{ favorite: !starMessage }
 		)
 		const { message } = response.data
-		console.log(response.data)
 		if (response.statusText === 'OK') {
 			setStarMessage(message.favorite)
 		}

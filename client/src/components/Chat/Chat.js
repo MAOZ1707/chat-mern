@@ -1,77 +1,33 @@
-import React, { useEffect, useState } from 'react'
-import moment from 'moment'
+import React from 'react'
 import Picker from 'emoji-picker-react'
 
 import { useAuth } from '../../context/authContext'
 import { useRooms } from '../../context/roomsContext'
-import { useMessage } from '../../context/messageContext'
 import Conversation from './Conversation'
+import ChatLogic from './Logic/ChatLogic'
 
-import { Avatar, IconButton } from '@material-ui/core'
 import { InsertEmoticon, SendOutlined } from '@material-ui/icons'
-
+import { Avatar, IconButton } from '@material-ui/core'
 import HeaderOptions from './HeaderOptions'
 import HeaderFiles from './HeaderFiles'
 import HeaderSearch from './HeaderSearch'
 
 import './Chat.css'
-import { useSocket } from '../../context/socketContext'
 
 const Chat = ({ socket }) => {
 	const { selectedRoom, roomUsers } = useRooms()
 	const { username } = useAuth()
-	const { chatUsers, setChatUsers } = useSocket()
-	const { saveMessage, conversationMsgs, setLastMessage } = useMessage()
-
-	const [message, setMessage] = useState({ name: username, text: '', room: '' })
-	const [messages, setMessages] = useState(conversationMsgs || [])
-
-	const [searchTerm, setSearchTerm] = useState('')
-	const [openEmoji, setOpenEmoji] = useState(false)
-
-	useEffect(() => {
-		socket.emit('userJoin', username)
-	}, [])
-
-	useEffect(() => {
-		if (conversationMsgs) setMessages(conversationMsgs)
-	}, [conversationMsgs, selectedRoom])
-
-	useEffect(() => {
-		socket.on('sendMessage', (newMessage) => {
-			setMessages((prev) => [...prev, newMessage])
-		})
-	}, [])
-
-	useEffect(() => {
-		socket.on('userList', (userList) => {
-			setChatUsers(userList)
-		})
-	}, [chatUsers])
-
-	const sendMessage = (e) => {
-		e.preventDefault()
-		let format = moment().format('HH:mm a')
-		const newMessage = {
-			name: message.name,
-			text: message.text,
-			room: selectedRoom.title,
-			time: format,
-			roomId: selectedRoom._id,
-		}
-		socket.emit('sendMessage', newMessage)
-		setMessage({ name: message.name, text: '', room: '' })
-		setLastMessage({ roomId: selectedRoom._id, text: message.text })
-		saveMessage(newMessage)
-		setOpenEmoji(false)
-	}
-
-	const handleChange = (e) => {
-		setMessage({ ...message, text: e.target.value })
-	}
-	const onEmojiClick = (event, emojiObject) => {
-		setMessage({ ...message, text: message.text + emojiObject.emoji })
-	}
+	const {
+		handleChange,
+		message,
+		messages,
+		onEmojiClick,
+		openEmoji,
+		searchTerm,
+		sendMessage,
+		setOpenEmoji,
+		setSearchTerm,
+	} = ChatLogic(socket)
 
 	return (
 		<div className='chat'>

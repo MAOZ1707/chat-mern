@@ -38,12 +38,8 @@ const FriendsView = ({ user, redirect }) => {
 				redirect('rooms')
 				setLoad((prev) => !prev)
 			}
-		} catch (error) {
-			console.log(error)
-		}
+		} catch (error) {}
 	}, [])
-
-	console.log(error)
 
 	return (
 		<div className='friends_view'>

@@ -1,6 +1,6 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useState } from 'react'
 
-import axios from 'axios'
+import { useHttp } from '../hooks/useHttp'
 
 const MessageContext = React.createContext()
 
@@ -11,25 +11,26 @@ export function useMessage() {
 export function MessageProvider({ children }) {
 	const [conversationMsgs, setConversationMsgs] = useState(null)
 	const [lastMessage, setLastMessage] = useState()
+	const { sendRequest } = useHttp()
 
 	const saveMessage = async (data) => {
 		if (data) {
 			try {
-				await axios({
-					url: `http://localhost:5000/messages/save`,
-					method: 'POST',
-					data: {
+				await sendRequest(
+					`http://localhost:5000/messages/save`,
+					'POST',
+					{
 						messages: data.text,
 						sender: data.name,
 						time: data.time,
 						conversationId: data.roomId,
 					},
-					headers: {
+					{
 						'Content-Type': 'application/json',
 						'Access-Control-Allow-Origin': '*',
 						// Authorization: 'Bearer ' + token,
-					},
-				})
+					}
+				)
 			} catch (error) {
 				console.log(error)
 			}
@@ -39,15 +40,15 @@ export function MessageProvider({ children }) {
 	const getRoomMessages = useCallback(async (roomId) => {
 		if (roomId) {
 			try {
-				const getData = await axios({
-					url: `http://localhost:5000/messages/room/${roomId}`,
-					method: 'GET',
-					headers: {
+				const getData = await sendRequest(
+					`http://localhost:5000/messages/room/${roomId}`,
+					'GET',
+					{
 						'Content-Type': 'application/json',
 						'Access-Control-Allow-Origin': '*',
 						// Authorization: 'Bearer ' + token,
-					},
-				})
+					}
+				)
 				setConversationMsgs(getData.data.message)
 			} catch (error) {}
 		}

@@ -1,41 +1,14 @@
 import { IconButton } from '@material-ui/core'
 import { SendOutlined } from '@material-ui/icons'
 import SecurityIcon from '@material-ui/icons/Security'
-import moment from 'moment'
-import React, { useEffect, useState } from 'react'
-import { useAuth } from '../../context/authContext'
-import { useSocket } from '../../context/socketContext'
+import React from 'react'
+import PrivateChatLogic from './Logic/PrivateChatLogic'
 
 import './PrivateChat.css'
 
 const PrivateChat = ({ friend }) => {
-	const { username } = useAuth()
-	const { socket } = useSocket()
-	const [messageList, setMessageList] = useState([])
-	const [message, setMessage] = useState({ name: username, text: '' })
-	console.log(friend)
-	const handleChange = (e) => {
-		setMessage({ ...message, text: e.target.value })
-	}
-
-	const sendMessage = (e) => {
-		e.preventDefault()
-		let format = moment().format('HH:mm a')
-		const newMessage = {
-			name: message.name,
-			text: message.text,
-			time: format,
-			to: friend,
-			private: true,
-		}
-		socket.emit('sendMessage', newMessage)
-		setMessage({ name: message.name, text: '' })
-	}
-	useEffect(() => {
-		socket.on('sendMessage', (newMessage) => {
-			setMessageList((prev) => [...prev, newMessage])
-		})
-	}, [])
+	const { handleChange, message, messageList, sendMessage } =
+		PrivateChatLogic(friend)
 
 	return (
 		<div className='private-chat__container'>
@@ -51,6 +24,7 @@ const PrivateChat = ({ friend }) => {
 				{messageList &&
 					messageList.map((msg) => (
 						<div
+							key={msg.name}
 							className={`private-chat__message_wrapper ${
 								friend === msg.name ? 'receiver' : null
 							}`}>

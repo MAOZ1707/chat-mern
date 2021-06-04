@@ -16,80 +16,23 @@ import './FriendList.css'
 import { useSocket } from '../../context/socketContext'
 import Modal from '../../UiElements/Modal/Modal'
 import PrivateChat from '../PrivateChat/PrivateChat'
+import FriendsLogics from './Logic/FriendsLogics'
 
 const FriendsList = () => {
-	const [anchorEl, setAnchorEl] = React.useState(null)
-	const { setUserFriends, userFriends, loadUserFriends } = useUsers()
-	const { userId } = useAuth()
 	const { rooms } = useRooms()
-	const { sendRequest } = useHttp()
-	const { chatUsers, socket } = useSocket()
-	const [load, setLoad] = useState(false)
-	const [openPrivateMessage, setOpenPrivateMessage] = useState(false)
-	const [selectedFriend, setSelectedFriend] = useState('')
-
-	useEffect(() => {
-		loadUserFriends(userId)
-	}, [loadUserFriends, userId])
-
-	const handleClick = (event, friend) => {
-		setSelectedFriend(friend.email)
-		setAnchorEl(event.currentTarget)
-	}
-
-	const inviteToRoom = async (roomId, email) => {
-		try {
-			const response = await sendRequest(
-				`http://localhost:5000/rooms/${roomId}/addUser`,
-				'POST',
-				{
-					email: email,
-					admin: userId,
-				},
-				{
-					'Content-Type': 'application/json',
-					// Authorization: 'Bearer ' + token,
-				}
-			)
-			if (response.statusText === 'OK') {
-				setAnchorEl(null)
-			}
-		} catch (error) {}
-	}
-
-	const handleClose = () => {
-		setAnchorEl(null)
-	}
-	const removeFriend = async (friendEmail) => {
-		try {
-			const response = await sendRequest(
-				`http://localhost:5000/users/remove-friend`,
-				'POST',
-				{
-					admin: userId,
-					friendEmail,
-				},
-				{
-					'Content-Type': 'application/json',
-					// Authorization: 'Bearer ' + token,
-				}
-			)
-			const { updateUser } = response.data
-
-			if (response.statusText === 'OK') {
-				setUserFriends(updateUser.friends)
-				setLoad((prev) => !prev)
-			}
-		} catch (error) {}
-	}
-
-	const sendPrivateMessage = (friend) => {
-		if (socket) {
-			socket.emit('privateMessage', friend)
-			setSelectedFriend(friend)
-			setOpenPrivateMessage(true)
-		}
-	}
+	const { userFriends } = useUsers()
+	const { chatUsers } = useSocket()
+	const {
+		anchorEl,
+		handleClick,
+		handleClose,
+		inviteToRoom,
+		openPrivateMessage,
+		removeFriend,
+		selectedFriend,
+		sendPrivateMessage,
+		setOpenPrivateMessage,
+	} = FriendsLogics()
 
 	return (
 		<div className='friend-list__container'>
