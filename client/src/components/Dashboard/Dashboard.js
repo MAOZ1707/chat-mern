@@ -5,6 +5,8 @@ import { useSocket } from '../../context/socketContext'
 import { useTheme } from '../../context/themeContext'
 import { useUsers } from '../../context/userContext'
 import { useLocalStorage } from '../../hooks/useLocalStorage'
+
+import DefaultBG from '../../utils/Images/default.jpg'
 import Chat from '../Chat/Chat'
 import SideBar from '../SideBar/SideBar'
 
@@ -20,7 +22,7 @@ const Dashboard = ({ user }) => {
 		if (selectTheme) {
 			setValue(selectTheme)
 		} else {
-			setValue('')
+			setValue(DefaultBG)
 		}
 	}, [selectTheme])
 

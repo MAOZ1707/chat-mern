@@ -2,7 +2,7 @@ import React from 'react'
 
 import { useTheme } from '../../context/themeContext'
 
-import b1 from '../../utils/Images/b1.png'
+import b1 from '../../utils/Images/b1.jpg'
 import b2 from '../../utils/Images/b2.png'
 import b3 from '../../utils/Images/b3.jpg'
 import b4 from '../../utils/Images/b4.jpg'
@@ -17,7 +17,6 @@ const BackgroundTheme = () => {
 	const { setSelectTheme } = useTheme()
 
 	const images = [b1, b2, b3, b4, b5, b6, b7, b8]
-
 	const handleClick = (img) => {
 		setSelectTheme(img)
 	}
