@@ -4,8 +4,15 @@ import { useRooms } from '../../context/roomsContext'
 import { AddOutlined, SupervisorAccount } from '@material-ui/icons'
 import ChatOutlinedIcon from '@material-ui/icons/ChatOutlined'
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined'
-import { Avatar, IconButton, Menu, MenuItem } from '@material-ui/core'
+import {
+	Avatar,
+	IconButton,
+	Menu,
+	MenuItem,
+	withStyles,
+} from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import Tooltip from '@material-ui/core/Tooltip'
 
 import './SideBar.css'
 import Loader from '../../UiElements/Loader/Loader'
@@ -25,6 +32,15 @@ const useStyles = makeStyles((theme) => ({
 		height: theme.spacing(6),
 	},
 }))
+
+const LightTooltip = withStyles((theme) => ({
+	tooltip: {
+		backgroundColor: theme.palette.common.black,
+		color: 'rgba(255,255,255)',
+		boxShadow: theme.shadows[1],
+		fontSize: 15,
+	},
+}))(Tooltip)
 
 const SideBar = ({ socket, username }) => {
 	const [options, setOptions] = useState('')
@@ -67,18 +83,26 @@ const SideBar = ({ socket, username }) => {
 			<div className='sidebar__header'>
 				<Avatar className={classes.large}>{getUserCharacters}</Avatar>
 				<div className='sidebar__headerRight'>
-					<IconButton onClick={() => setOptions('friends-list')}>
-						<SupervisorAccount fontSize='small' />
-					</IconButton>
-					<IconButton onClick={() => setOptions('rooms')}>
-						<ChatOutlinedIcon fontSize='small' />
-					</IconButton>
-					<IconButton
-						aria-controls='simple-menu'
-						aria-haspopup='true'
-						onClick={handleClick}>
-						<AddOutlined />
-					</IconButton>
+					<LightTooltip title='Friends' placement='top-start'>
+						<IconButton onClick={() => setOptions('friends-list')}>
+							<SupervisorAccount fontSize='small' />
+						</IconButton>
+					</LightTooltip>
+
+					<LightTooltip title='Rooms' placement='top-start'>
+						<IconButton onClick={() => setOptions('rooms')}>
+							<ChatOutlinedIcon fontSize='small' />
+						</IconButton>
+					</LightTooltip>
+
+					<LightTooltip title='Add' placement='top-start'>
+						<IconButton
+							aria-controls='simple-menu'
+							aria-haspopup='true'
+							onClick={handleClick}>
+							<AddOutlined />
+						</IconButton>
+					</LightTooltip>
 
 					<Menu
 						id='simple-menu'

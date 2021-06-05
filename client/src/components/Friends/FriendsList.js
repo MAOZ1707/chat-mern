@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
 import { useUsers } from '../../context/userContext'
-import { useAuth } from '../../context/authContext'
 import { useRooms } from '../../context/roomsContext'
-import { useHttp } from '../../hooks/useHttp'
 
 import HighlightOffOutlinedIcon from '@material-ui/icons/HighlightOffOutlined'
 import MessageOutlinedIcon from '@material-ui/icons/MessageOutlined'
-import { Avatar } from '@material-ui/core'
+import { Avatar, Tooltip, withStyles } from '@material-ui/core'
 import GroupAddIcon from '@material-ui/icons/GroupAdd'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -17,6 +15,15 @@ import { useSocket } from '../../context/socketContext'
 import Modal from '../../UiElements/Modal/Modal'
 import PrivateChat from '../PrivateChat/PrivateChat'
 import FriendsLogics from './Logic/FriendsLogics'
+
+const LightTooltip = withStyles((theme) => ({
+	tooltip: {
+		backgroundColor: theme.palette.common.black,
+		color: 'rgba(255,255,255)',
+		boxShadow: theme.shadows[1],
+		fontSize: 15,
+	},
+}))(Tooltip)
 
 const FriendsList = () => {
 	const { rooms } = useRooms()
@@ -61,18 +68,25 @@ const FriendsList = () => {
 								aria-controls='simple-menu'
 								aria-haspopup='true'
 								className='friend-list-option'>
-								<GroupAddIcon
-									className='group_icon'
-									onClick={(event) => handleClick(event, friend)}
-								/>
-								<HighlightOffOutlinedIcon
-									className='delete_icon'
-									onClick={() => removeFriend(friend.email)}
-								/>
-								<MessageOutlinedIcon
-									className='msg_icon'
-									onClick={() => sendPrivateMessage(friend.name)}
-								/>
+								<LightTooltip title='Invite to room' placement='bottom'>
+									<GroupAddIcon
+										className='group_icon'
+										onClick={(event) => handleClick(event, friend)}
+									/>
+								</LightTooltip>
+
+								<LightTooltip title='Private message' placement='bottom'>
+									<MessageOutlinedIcon
+										className='msg_icon'
+										onClick={() => sendPrivateMessage(friend.name)}
+									/>
+								</LightTooltip>
+								<LightTooltip title='Remove' placement='bottom'>
+									<HighlightOffOutlinedIcon
+										className='delete_icon'
+										onClick={() => removeFriend(friend.email)}
+									/>
+								</LightTooltip>
 							</span>
 						</div>
 						<Menu

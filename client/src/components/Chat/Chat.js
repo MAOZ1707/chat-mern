@@ -57,6 +57,7 @@ const Chat = ({ socket }) => {
 							<HeaderOptions />
 						</div>
 					</div>
+
 					<>
 						<Conversation
 							search={searchTerm}
