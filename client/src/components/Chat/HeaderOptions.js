@@ -2,26 +2,13 @@ import React, { useState } from 'react'
 
 import { useAuth } from '../../context/authContext'
 
-import {
-	IconButton,
-	Menu,
-	MenuItem,
-	Tooltip,
-	withStyles,
-} from '@material-ui/core'
+import { IconButton, Menu, MenuItem } from '@material-ui/core'
 import { MoreVert } from '@material-ui/icons'
 import BackgroundTheme from '../../UiElements/BackgroundTheme/BackgroundTheme'
 import Modal from '../../UiElements/Modal/Modal'
 import StarMessages from './StarMessages'
 
-const LightTooltip = withStyles((theme) => ({
-	tooltip: {
-		backgroundColor: theme.palette.common.black,
-		color: 'rgba(255,255,255)',
-		boxShadow: theme.shadows[1],
-		fontSize: 15,
-	},
-}))(Tooltip)
+import { LightTooltip } from '../../utils/materialUI/style'
 
 const HeaderOptions = () => {
 	const [anchorEl, setAnchorEl] = React.useState(null)

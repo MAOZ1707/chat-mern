@@ -4,43 +4,16 @@ import { useRooms } from '../../context/roomsContext'
 import { AddOutlined, SupervisorAccount } from '@material-ui/icons'
 import ChatOutlinedIcon from '@material-ui/icons/ChatOutlined'
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined'
-import {
-	Avatar,
-	IconButton,
-	Menu,
-	MenuItem,
-	withStyles,
-} from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
-import Tooltip from '@material-ui/core/Tooltip'
+import { Avatar, IconButton, Menu, MenuItem } from '@material-ui/core'
+import { LightTooltip, useStyles } from '../../utils/materialUI/style'
+import Loader from '../../UiElements/Loader/Loader'
 
 import './SideBar.css'
-import Loader from '../../UiElements/Loader/Loader'
 
 const Rooms = React.lazy(() => import('../Rooms/Rooms'))
 const CreateRoom = React.lazy(() => import('../Rooms/CreateRoom'))
 const Friends = React.lazy(() => import('../Friends/Friends'))
 const FriendsList = React.lazy(() => import('../Friends/FriendsList'))
-
-const useStyles = makeStyles((theme) => ({
-	small: {
-		width: theme.spacing(3),
-		height: theme.spacing(3),
-	},
-	large: {
-		width: theme.spacing(6),
-		height: theme.spacing(6),
-	},
-}))
-
-const LightTooltip = withStyles((theme) => ({
-	tooltip: {
-		backgroundColor: theme.palette.common.black,
-		color: 'rgba(255,255,255)',
-		boxShadow: theme.shadows[1],
-		fontSize: 15,
-	},
-}))(Tooltip)
 
 const SideBar = ({ socket, username }) => {
 	const [options, setOptions] = useState('')

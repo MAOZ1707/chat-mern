@@ -16,14 +16,7 @@ import Modal from '../../UiElements/Modal/Modal'
 import PrivateChat from '../PrivateChat/PrivateChat'
 import FriendsLogics from './Logic/FriendsLogics'
 
-const LightTooltip = withStyles((theme) => ({
-	tooltip: {
-		backgroundColor: theme.palette.common.black,
-		color: 'rgba(255,255,255)',
-		boxShadow: theme.shadows[1],
-		fontSize: 15,
-	},
-}))(Tooltip)
+import { LightTooltip } from '../../utils/materialUI/style'
 
 const FriendsList = () => {
 	const { rooms } = useRooms()

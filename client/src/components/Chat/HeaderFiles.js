@@ -1,21 +1,8 @@
-import {
-	IconButton,
-	Menu,
-	MenuItem,
-	Tooltip,
-	withStyles,
-} from '@material-ui/core'
-import { AttachFile } from '@material-ui/icons'
 import React from 'react'
+import { IconButton, Menu, MenuItem } from '@material-ui/core'
+import { AttachFile } from '@material-ui/icons'
 
-const LightTooltip = withStyles((theme) => ({
-	tooltip: {
-		backgroundColor: theme.palette.common.black,
-		color: 'rgba(255,255,255)',
-		boxShadow: theme.shadows[1],
-		fontSize: 15,
-	},
-}))(Tooltip)
+import { LightTooltip } from '../../utils/materialUI/style'
 
 const HeaderFiles = () => {
 	const [anchorEl, setAnchorEl] = React.useState(null)

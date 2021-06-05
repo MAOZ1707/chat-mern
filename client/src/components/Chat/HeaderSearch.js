@@ -1,17 +1,9 @@
-import { IconButton, Tooltip, withStyles } from '@material-ui/core'
-import { SearchOutlined } from '@material-ui/icons'
 import React, { useState } from 'react'
+import { IconButton } from '@material-ui/core'
+import { SearchOutlined } from '@material-ui/icons'
 
+import { LightTooltip } from '../../utils/materialUI/style'
 import './HeaderSearch.css'
-
-const LightTooltip = withStyles((theme) => ({
-	tooltip: {
-		backgroundColor: theme.palette.common.black,
-		color: 'rgba(255,255,255)',
-		boxShadow: theme.shadows[1],
-		fontSize: 15,
-	},
-}))(Tooltip)
 
 const HeaderSearch = ({ searchTerm, setSearchTerm }) => {
 	const [searchActive, setSearchActive] = useState(false)
