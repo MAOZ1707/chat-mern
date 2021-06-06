@@ -18,7 +18,7 @@ import FriendsLogics from './Logic/FriendsLogics'
 
 import { LightTooltip } from '../../utils/materialUI/style'
 
-const FriendsList = () => {
+const FriendsList = ({ option, search }) => {
 	const { rooms } = useRooms()
 	const { userFriends } = useUsers()
 	const { chatUsers } = useSocket()
@@ -34,6 +34,15 @@ const FriendsList = () => {
 		setOpenPrivateMessage,
 	} = FriendsLogics()
 
+	let searchFriends
+	if (option === 'friends-list') {
+		searchFriends = userFriends.filter((friend) =>
+			friend.name.toLowerCase().includes(search.toLowerCase())
+		)
+	}
+
+	console.log(searchFriends)
+
 	return (
 		<div className='friend-list__container'>
 			<Modal
@@ -43,8 +52,8 @@ const FriendsList = () => {
 			</Modal>
 
 			<h2 className='friend-list__title'>My Friends</h2>
-			{userFriends &&
-				userFriends.map((friend, i) => (
+			{searchFriends &&
+				searchFriends.map((friend, i) => (
 					<div className='friend-list_view' key={i}>
 						<div className='avatar'>
 							<Avatar>PIC</Avatar>

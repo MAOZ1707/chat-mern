@@ -1,8 +1,22 @@
+::-webkit-scrollbar {
+	width: 10px;
+}
+::-webkit-scrollbar-track {
+	border-radius: 0px;
+}
+::-webkit-scrollbar-thumb {
+	background: #5ae488;
+	border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+	background: #49b96e;
+}
 .sidebar {
 	display: flex;
 	flex-direction: column;
 	flex: 0.35;
 }
+
 .sidebar__header {
 	display: flex;
 	justify-content: space-between;

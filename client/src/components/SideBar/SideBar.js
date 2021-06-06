@@ -18,6 +18,7 @@ const FriendsList = React.lazy(() => import('../Friends/FriendsList'))
 const SideBar = ({ socket, username }) => {
 	const [options, setOptions] = useState('')
 	const [anchorEl, setAnchorEl] = React.useState(null)
+	const [searchTerm, setSearchTerm] = useState('')
 
 	const { rooms } = useRooms()
 	const classes = useStyles()
@@ -31,17 +32,27 @@ const SideBar = ({ socket, username }) => {
 			localRoute = <CreateRoom redirect={setOptions} />
 			break
 		case 'rooms':
-			localRoute = <Rooms rooms={rooms} />
+			localRoute = <Rooms rooms={rooms} option={options} search={searchTerm} />
 			break
 		case 'add-friends':
 			localRoute = <Friends redirect={setOptions} />
 			break
 		case 'friends-list':
-			localRoute = <FriendsList redirect={setOptions} />
+			localRoute = (
+				<FriendsList
+					redirect={setOptions}
+					option={options}
+					search={searchTerm}
+				/>
+			)
 			break
 		default:
-			localRoute = <Rooms rooms={rooms} />
+			localRoute = <Rooms rooms={rooms} option={options} search={searchTerm} />
 			break
+	}
+
+	const onSearchChange = (e) => {
+		setSearchTerm(e.target.value)
 	}
 
 	const handleClick = (event) => {
@@ -96,7 +107,12 @@ const SideBar = ({ socket, username }) => {
 			<div className='sidebar__search'>
 				<div className='sidebar__searchContainer'>
 					<SearchOutlinedIcon />
-					<input type='text' placeholder='Search or start new chat' />
+					<input
+						type='text'
+						placeholder='Search or start new chat'
+						onChange={onSearchChange}
+						value={searchTerm}
+					/>
 				</div>
 			</div>
 
