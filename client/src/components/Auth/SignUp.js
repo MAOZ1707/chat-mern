@@ -29,10 +29,9 @@ const Signup = () => {
 				.required('Required'),
 		}),
 		onSubmit: async (values) => {
-			console.log(values)
 			try {
 				const response = await sendRequest(
-					`http://localhost:5000/users/signup`,
+					`${process.env.REACT_APP_BACKEND_URL}/users/signup`,
 					'POST',
 					{
 						name: values.name,
@@ -41,6 +40,7 @@ const Signup = () => {
 					},
 					{
 						'Content-Type': 'application/json',
+						'Access-Control-Allow-Origin': '*',
 					}
 				)
 				const data = response.data

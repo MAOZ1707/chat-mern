@@ -27,7 +27,7 @@ const Login = () => {
 		onSubmit: async (values) => {
 			try {
 				const response = await sendRequest(
-					`http://localhost:5000/users/login`,
+					`${process.env.REACT_APP_BACKEND_URL}/users/login`,
 					'POST',
 					{
 						email: values.email,
@@ -35,6 +35,7 @@ const Login = () => {
 					},
 					{
 						'Content-Type': 'application/json',
+						'Access-Control-Allow-Origin': '*',
 					}
 				)
 				const data = response.data

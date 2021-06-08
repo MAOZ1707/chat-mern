@@ -7,10 +7,12 @@ import FriendsView from './FriendsView'
 
 import './Friends.css'
 import Loader from '../../UiElements/Loader/Loader'
+import { useAuth } from '../../context/authContext'
 
 const Friends = ({ redirect }) => {
 	const { error, isLoading, sendRequest } = useHttp()
 	const [friend, setFriend] = useState(null)
+	const { token } = useAuth()
 
 	const formik = useFormik({
 		initialValues: {
@@ -22,8 +24,16 @@ const Friends = ({ redirect }) => {
 		onSubmit: async (values) => {
 			try {
 				const response = await sendRequest(
-					`http://localhost:5000/users/find-friend${'?email=' + values.email}`,
-					'GET'
+					`${process.env.REACT_APP_BACKEND_URL}/users/find-friend${
+						'?email=' + values.email
+					}`,
+					'GET',
+					null,
+					{
+						'Content-Type': 'application/json',
+						'Access-Control-Allow-Origin': '*',
+						Authorization: 'Bearer ' + token,
+					}
 				)
 				const { data } = response
 				setFriend(data.user)

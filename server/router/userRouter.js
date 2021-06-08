@@ -9,7 +9,6 @@ const validateToken = require('../middleware/validateToken')
 const router = express.Router()
 
 const signToken = (id) => jwt.sign({ id: id }, process.env.JWT_SECRET)
-
 router.post('/signup', async (req, res, next) => {
 	try {
 		const userInfo = req.body
@@ -36,10 +35,8 @@ router.post('/login', async (req, res, next) => {
 	}
 })
 
-// TODO:Auth
-
 // Validation
-// router.use(validateToken)
+router.use(validateToken)
 
 router.get('/', async (req, res, next) => {
 	try {
@@ -57,9 +54,9 @@ router.get('/user/:id', async (req, res, next) => {
 	try {
 		let user = await usersBL.getUser(userId)
 
-		// if (req.user._id.toString() !== user._id.toString()) {
-		// 	return next(new AppError('You dont have permission please log in', 401))
-		// }
+		if (req.user._id.toString() !== user._id.toString()) {
+			return next(new AppError('You dont have permission please log in', 401))
+		}
 
 		res.json({
 			user: {

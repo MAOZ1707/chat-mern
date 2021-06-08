@@ -1,8 +1,14 @@
 const express = require('express')
+const cors = require('cors')
+const validateToken = require('../middleware/validateToken')
+
+const app = express()
 const messagesBL = require('../BL/messagesBL')
 const AppError = require('../utils/appError')
 
 const router = express.Router()
+
+router.use(validateToken)
 
 router.get('/:id', async (req, res, next) => {
 	try {
@@ -34,7 +40,8 @@ router.get('/room/:id', async (req, res, next) => {
 	}
 })
 
-router.post('/:id/favorite', async (req, res, next) => {
+app.options('/:id/favorite', cors())
+router.put('/:id/favorite', cors(), async (req, res, next) => {
 	let messageId = req.params.id
 	let { favorite } = req.body
 

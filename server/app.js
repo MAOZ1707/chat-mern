@@ -8,13 +8,14 @@ const dotenv = require('dotenv')
 dotenv.config({ path: './config.env' })
 
 const app = express()
-
+app.options('*', cors())
 app.use(cors({ origin: true, credentials: true }))
 app.use(express.json())
 app.use(morgan('dev'))
 
 // connect to database
 require('./config/database')
+
 app.use(function (req, res, next) {
 	res.header('Access-Control-Allow-Origin', '*')
 	res.header('Access-Control-Allow-Credentials', true)

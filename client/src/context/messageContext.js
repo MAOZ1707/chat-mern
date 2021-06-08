@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useState } from 'react'
 
 import { useHttp } from '../hooks/useHttp'
+import { useAuth } from './authContext'
 
 const MessageContext = React.createContext()
 
@@ -12,12 +13,13 @@ export function MessageProvider({ children }) {
 	const [conversationMsgs, setConversationMsgs] = useState(null)
 	const [lastMessage, setLastMessage] = useState()
 	const { sendRequest } = useHttp()
+	const { token } = useAuth()
 
 	const saveMessage = async (data) => {
 		if (data) {
 			try {
 				await sendRequest(
-					`http://localhost:5000/messages/save`,
+					`${process.env.REACT_APP_BACKEND_URL}/messages/save`,
 					'POST',
 					{
 						messages: data.text,
@@ -28,7 +30,7 @@ export function MessageProvider({ children }) {
 					{
 						'Content-Type': 'application/json',
 						'Access-Control-Allow-Origin': '*',
-						// Authorization: 'Bearer ' + token,
+						Authorization: 'Bearer ' + token,
 					}
 				)
 			} catch (error) {
@@ -41,12 +43,13 @@ export function MessageProvider({ children }) {
 		if (roomId) {
 			try {
 				const getData = await sendRequest(
-					`http://localhost:5000/messages/room/${roomId}`,
+					`${process.env.REACT_APP_BACKEND_URL}/messages/room/${roomId}`,
 					'GET',
+					null,
 					{
 						'Content-Type': 'application/json',
 						'Access-Control-Allow-Origin': '*',
-						// Authorization: 'Bearer ' + token,
+						Authorization: 'Bearer ' + token,
 					}
 				)
 				setConversationMsgs(getData.data.message)

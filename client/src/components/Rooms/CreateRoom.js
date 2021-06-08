@@ -27,7 +27,7 @@ const CreateRoom = ({ redirect }) => {
 		onSubmit: async (values) => {
 			try {
 				const response = await sendRequest(
-					`http://localhost:5000/rooms/create`,
+					`${process.env.REACT_APP_BACKEND_URL}/rooms/create`,
 					'POST',
 					{
 						title: values.name,
@@ -39,10 +39,9 @@ const CreateRoom = ({ redirect }) => {
 						Authorization: 'Bearer ' + token,
 					}
 				)
-				// const {data} = response
 				if (response.statusText === 'OK') {
 					loadRooms(userId)
-					redirect('chat')
+					redirect('rooms')
 				}
 			} catch (error) {}
 		},

@@ -8,8 +8,8 @@ import { useUsers } from '../../context/userContext'
 import './Friends.css'
 
 const FriendsView = ({ user, redirect }) => {
-	const { error, sendRequest } = useHttp()
-	const { username, userId } = useAuth()
+	const { sendRequest } = useHttp()
+	const { username, userId, token } = useAuth()
 	const { setUserFriends, userFriends } = useUsers()
 	const [load, setLoad] = useState(false)
 
@@ -19,7 +19,7 @@ const FriendsView = ({ user, redirect }) => {
 		const admin = { username, userId }
 		try {
 			const response = await sendRequest(
-				`http://localhost:5000/users/add`,
+				`${process.env.REACT_APP_BACKEND_URL}/users/add`,
 				'POST',
 				{
 					friend: user,
@@ -28,7 +28,7 @@ const FriendsView = ({ user, redirect }) => {
 				{
 					'Content-Type': 'application/json',
 					'Access-Control-Allow-Origin': '*',
-					// Authorization: 'Bearer ' + token,
+					Authorization: 'Bearer ' + token,
 				}
 			)
 			const { data } = response

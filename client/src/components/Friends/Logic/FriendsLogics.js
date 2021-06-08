@@ -7,7 +7,7 @@ import { useHttp } from '../../../hooks/useHttp'
 const FriendsLogics = () => {
 	const [anchorEl, setAnchorEl] = useState(null)
 	const { setUserFriends, loadUserFriends } = useUsers()
-	const { userId } = useAuth()
+	const { userId, token } = useAuth()
 	const { sendRequest } = useHttp()
 	const { chatUsers, socket } = useSocket()
 	const [load, setLoad] = useState(false)
@@ -26,7 +26,7 @@ const FriendsLogics = () => {
 	const inviteToRoom = async (roomId, email) => {
 		try {
 			const response = await sendRequest(
-				`http://localhost:5000/rooms/${roomId}/addUser`,
+				`${process.env.REACT_APP_BACKEND_URL}/rooms/${roomId}/addUser`,
 				'POST',
 				{
 					email: email,
@@ -34,7 +34,7 @@ const FriendsLogics = () => {
 				},
 				{
 					'Content-Type': 'application/json',
-					// Authorization: 'Bearer ' + token,
+					Authorization: 'Bearer ' + token,
 				}
 			)
 			if (response.statusText === 'OK') {
@@ -49,7 +49,7 @@ const FriendsLogics = () => {
 	const removeFriend = async (friendEmail) => {
 		try {
 			const response = await sendRequest(
-				`http://localhost:5000/users/remove-friend`,
+				`${process.env.REACT_APP_BACKEND_URL}/users/remove-friend`,
 				'POST',
 				{
 					admin: userId,
@@ -57,7 +57,7 @@ const FriendsLogics = () => {
 				},
 				{
 					'Content-Type': 'application/json',
-					// Authorization: 'Bearer ' + token,
+					Authorization: 'Bearer ' + token,
 				}
 			)
 			const { updateUser } = response.data

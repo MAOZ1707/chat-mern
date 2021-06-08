@@ -41,8 +41,6 @@ const FriendsList = ({ option, search }) => {
 		)
 	}
 
-	console.log(searchFriends)
-
 	return (
 		<div className='friend-list__container'>
 			<Modal

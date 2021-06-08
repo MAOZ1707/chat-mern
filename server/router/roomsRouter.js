@@ -2,7 +2,11 @@ const express = require('express')
 const roomsBL = require('../BL/roomsBL')
 const AppError = require('../utils/appError')
 
+const validateToken = require('../middleware/validateToken')
 const router = express.Router()
+
+// Validation
+router.use(validateToken)
 
 router.get('/:id', async (req, res, next) => {
 	try {

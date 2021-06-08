@@ -1,5 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { useHttp } from '../hooks/useHttp'
+import { useAuth } from './authContext'
 
 const RoomsContext = React.createContext()
 
@@ -11,18 +12,19 @@ export function RoomsProvider({ children }) {
 	const [rooms, setRooms] = useState([])
 	const [selectedRoom, setSelectedRoom] = useState(null)
 	const [roomUsers, setRoomUsers] = useState(null)
-
+	const { token } = useAuth()
 	const { sendRequest } = useHttp()
 
 	const loadRooms = useCallback(async (userId) => {
 		try {
 			const response = await sendRequest(
-				`http://localhost:5000/rooms/user/${userId}`,
+				`${process.env.REACT_APP_BACKEND_URL}/rooms/user/${userId}`,
 				'GET',
+				null,
 				{
 					'Content-Type': 'application/json',
 					'Access-Control-Allow-Origin': '*',
-					// Authorization: 'Bearer ' + token,
+					Authorization: 'Bearer ' + token,
 				}
 			)
 			const data = await response.data.userRooms
@@ -33,12 +35,13 @@ export function RoomsProvider({ children }) {
 	const loadRoomUsers = useCallback(async (roomId) => {
 		try {
 			const response = await sendRequest(
-				`http://localhost:5000/rooms/room/${roomId}/users`,
+				`${process.env.REACT_APP_BACKEND_URL}/rooms/room/${roomId}/users`,
 				'GET',
+				null,
 				{
 					'Content-Type': 'application/json',
 					'Access-Control-Allow-Origin': '*',
-					// Authorization: 'Bearer ' + token,
+					Authorization: 'Bearer ' + token,
 				}
 			)
 			const { roomUsers } = await response.data
@@ -49,12 +52,13 @@ export function RoomsProvider({ children }) {
 	const chooseRoom = useCallback(async (roomId) => {
 		try {
 			const response = await sendRequest(
-				`http://localhost:5000/rooms/${roomId}`,
+				`${process.env.REACT_APP_BACKEND_URL}/rooms/${roomId}`,
 				'GET',
+				null,
 				{
 					'Content-Type': 'application/json',
 					'Access-Control-Allow-Origin': '*',
-					// Authorization: 'Bearer ' + token,
+					Authorization: 'Bearer ' + token,
 				}
 			)
 			const data = await response.data.room

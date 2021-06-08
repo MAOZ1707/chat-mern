@@ -7,7 +7,7 @@ import { useHttp } from '../../../hooks/useHttp'
 
 const SideBarLogic = (room) => {
 	const { socket } = useSocket()
-	const { userId } = useAuth()
+	const { userId, token } = useAuth()
 	const { selectedRoom, setSelectedRoom, setRooms } = useRooms()
 	const { getRoomMessages, lastMessage } = useMessage()
 	const [roomLastMsg, setRoomLastMsg] = useState()
@@ -30,12 +30,13 @@ const SideBarLogic = (room) => {
 		const getLastRoomMessage = async (roomId) => {
 			try {
 				const getData = await sendRequest(
-					`http://localhost:5000/messages/room/${roomId}`,
+					`${process.env.REACT_APP_BACKEND_URL}/messages/room/${roomId}`,
 					'GET',
+					null,
 					{
 						'Content-Type': 'application/json',
 						'Access-Control-Allow-Origin': '*',
-						// Authorization: 'Bearer ' + token,
+						Authorization: 'Bearer ' + token,
 					}
 				)
 
@@ -61,10 +62,15 @@ const SideBarLogic = (room) => {
 
 	const deleteRoom = async (roomId) => {
 		const response = await sendRequest(
-			`http://localhost:5000/rooms/${roomId}/delete`,
+			`${process.env.REACT_APP_BACKEND_URL}/rooms/${roomId}/delete`,
 			'DELETE',
 			{
 				admin: userId,
+			},
+			{
+				'Content-Type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+				Authorization: 'Bearer ' + token,
 			}
 		)
 		const { userRooms } = response.data

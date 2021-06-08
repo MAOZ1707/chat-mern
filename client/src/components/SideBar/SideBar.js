@@ -8,12 +8,12 @@ import { Avatar, IconButton, Menu, MenuItem } from '@material-ui/core'
 import { LightTooltip, useStyles } from '../../utils/materialUI/style'
 import Loader from '../../UiElements/Loader/Loader'
 
-import './SideBar.css'
+import CreateRoom from '../Rooms/CreateRoom'
+import Rooms from '../Rooms/Rooms'
+import Friends from '../Friends/Friends'
+import FriendsList from '../Friends/FriendsList'
 
-const Rooms = React.lazy(() => import('../Rooms/Rooms'))
-const CreateRoom = React.lazy(() => import('../Rooms/CreateRoom'))
-const Friends = React.lazy(() => import('../Friends/Friends'))
-const FriendsList = React.lazy(() => import('../Friends/FriendsList'))
+import './SideBar.css'
 
 const SideBar = ({ socket, username }) => {
 	const [options, setOptions] = useState('')

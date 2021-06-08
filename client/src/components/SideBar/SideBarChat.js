@@ -12,6 +12,10 @@ const SideBarChat = ({ room }) => {
 	const { userId } = useAuth()
 	const { deleteRoom, roomInfo, roomLastMsg } = SideBarLogic(room)
 
+	const onDeleteRoom = (id) => {
+		deleteRoom(id)
+	}
+
 	return (
 		<div className='sidebarChat' onClick={roomInfo}>
 			<Avatar />
@@ -22,7 +26,7 @@ const SideBarChat = ({ room }) => {
 			{selectedRoom && selectedRoom.admin === userId ? (
 				<div
 					className='sidebarChat__delete'
-					onClick={() => deleteRoom(selectedRoom._id)}>
+					onClick={() => onDeleteRoom(room._id)}>
 					<HighlightOffRoundedIcon />
 				</div>
 			) : null}

@@ -6,14 +6,20 @@ import './StarMessage.css'
 
 const StarMessages = () => {
 	const { sendRequest } = useHttp()
-	const { userId } = useAuth()
+	const { userId, token } = useAuth()
 	const [messages, setMessages] = useState([])
 
 	useEffect(() => {
 		const fetchData = async () => {
 			const response = await sendRequest(
-				`http://localhost:5000/messages/user/${userId}/favorite`,
-				'GET'
+				`${process.env.REACT_APP_BACKEND_URL}/messages/user/${userId}/favorite`,
+				'GET',
+				null,
+				{
+					'Content-Type': 'application/json',
+					'Access-Control-Allow-Origin': '*',
+					Authorization: 'Bearer ' + token,
+				}
 			)
 			if (response.statusText === 'OK') {
 				setMessages(response.data.message)

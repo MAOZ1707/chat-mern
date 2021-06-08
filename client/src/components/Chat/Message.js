@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import moment from 'moment'
 
 import { useHttp } from '../../hooks/useHttp'
+import { useAuth } from '../../context/authContext'
 
 import StarBorderOutlinedIcon from '@material-ui/icons/StarBorderOutlined'
 import StarIcon from '@material-ui/icons/Star'
@@ -9,14 +10,20 @@ import StarIcon from '@material-ui/icons/Star'
 import './Chat.css'
 
 const Message = ({ content, send }) => {
-	const { error, isLoading, sendRequest } = useHttp()
+	const { sendRequest } = useHttp()
+	const { token } = useAuth()
 	const [starMessage, setStarMessage] = useState(content.favorite)
 
 	const handleClick = async () => {
 		const response = await sendRequest(
-			`http://localhost:5000/messages/${content._id}/favorite`,
-			'POST',
-			{ favorite: !starMessage }
+			`${process.env.REACT_APP_BACKEND_URL}/messages/${content._id}/favorite`,
+			'PUT',
+			{ favorite: !starMessage },
+			{
+				'Content-Type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+				Authorization: 'Bearer ' + token,
+			}
 		)
 		const { message } = response.data
 		if (response.statusText === 'OK') {

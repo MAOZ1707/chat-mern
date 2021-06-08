@@ -13,7 +13,9 @@ const Modal = ({ open, children, onClose }) => {
 			<BackDrop onClose={onClose} />
 			<div className='modal__content'>{children}</div>
 			<div className='modal__footer'>
-				<button onClick={onClose}>close</button>
+				<button onClick={onClose} className='modal__close-btn'>
+					close
+				</button>
 			</div>
 		</div>,
 
